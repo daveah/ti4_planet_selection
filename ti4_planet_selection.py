@@ -45,6 +45,31 @@ tiles = [
     ("Blank", 0, 0, False, False, True),
 ]
 
+# allocations of tiles by number of players
+#   dictionary of player number to a tuple of allocations
+#   (number_of_tiles_per_player, number_of_low_value_tiles_in_shared,
+#    [(resource_allocation_player_1, influence_allocation_player_1), ...],
+#    # Wormholes will be allocated to first <num_wormholes> players
+#    # Allocation of specials (other than wormholes) to be randomly shuffled
+#    [(total_specials_player_n, min_anomolies_player_n, min_blanks_player_n), ...],
+#    # Allocation of specials fixed to a given player number
+#    [(total_specials_player_1, min_anomolies_player_1, min_blanks_player_1), ...],
+#    [])
+allocations = {
+    4: (8, 0,
+        [(11, 13), (11, 12), (12, 12), (12, 12)],
+        [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
+        [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]),
+    5: (6, 1,
+        [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
+        [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
+        [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]),
+    6: (5, 0,
+        [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
+        [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
+        [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)])
+}
+
 # Extract reference data into working vectors
 # All tile names
 names = [tile[0] for tile in tiles]
@@ -174,14 +199,29 @@ class Results:
 
     # Configure the results and allocate special tiles depending on number of players
     def _configure(self, num_players):
-        if num_players == 4:
-            self._configure_4_players()
-        elif num_players == 5:
-            self._configure_5_players()
-        elif num_players == 6:
-            self._configure_6_players()
-        else:
-            raise RuntimeError("Invalid number of players: {}".format(num_players))
+        player_allocations = allocations[num_players]
+        # Set the number of tiles to allocate to each player
+        self.num_tiles = player_allocations[0]
+        # Pull out a given number of the lowest value tiles at random
+        low = list(lowest)
+        random.shuffle(low)
+        for ii in range(0, player_allocations[1]):
+            self._allocate_planet(low[ii], -1)
+        # Set resources and influence budget for each player
+        self._configure_rip(list(player_allocations[2]))
+        # Allocate wormholes to the players
+        self._configure_w(num_players)
+        # Specials are allocated in two sets, one randomised, and one fixed
+        # left over specials are put in shared_planets
+        specials_r = list(player_allocations[3])
+        specials_f = list(player_allocations[4])
+        random.shuffle(specials_r)
+        specials = [(
+            specials_r[ii][0] + specials_f[ii][0],
+            specials_r[ii][1] + specials_f[ii][1],
+            specials_r[ii][2] + specials_f[ii][2]
+            ) for ii in range(0, num_players)]
+        self._configure_ab(specials)
 
     # Given a vector of tuples of (resource, influence) set up internal vectors
     #   for resource, influence and player_planets
@@ -191,10 +231,10 @@ class Results:
         self.player_influence = [res_infl[1] for res_infl in res_infls]
         self.player_planets = [[] for res_infl in res_infls]
 
-    # Configure wormholes, allocating to first 4 players
-    def _configure_w(self):
-        for ii in range(0, 4):
-            self._allocate_planet(wormhole[ii], ii)
+    # Configure wormholes, allocating evenly to players
+    def _configure_w(self, num_players):
+        for ii in range(0, len(wormhole)):
+            self._allocate_planet(wormhole[ii], ii % num_players)
 
     # Given a vector of tuples configure anomalies and blanks
     #   the tuples are (total number of anomalies and blanks,
@@ -229,61 +269,6 @@ class Results:
                 remain = remain[1:]
         for rem in remain:
             self._allocate_planet(rem, -1)
-
-    # Four player configuration
-    #   Place Mecatol Rex in shared_planets
-    #   Allocate one wormhole to each player
-    #   Allocate one random anomaly to each player, the 5th to a random player
-    #   Allocate one blank to each player, the 5th to a random player
-    #   The random players selected for the 5th anomaly and blank should be different
-    def _configure_4_players(self):
-        self.num_tiles = 8
-        res_infls = [(11, 13), (11, 12), (12, 12), (12, 12)]
-        self._configure_rip(res_infls)
-        # Allocate wormholes
-        self._configure_w();
-        # Allocate anomalies and blanks
-        abs = [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)]
-        random.shuffle(abs)
-        self._configure_ab(abs)
-
-    # Five player configuration
-    #   Place Mecatol Rex, one (1, 1) planet and a blank in shared_planets
-    #   Allocate one wormhole to each of players 1-4
-    #   Allocate one random anomaly to each player
-    #   Allocate one blank to player 5, the remainder to 3 random players
-    def _configure_5_players(self):
-        self.num_tiles = 6
-        self._allocate_planet(lowest[random.randint(0, 1)], -1)
-        res_infls = [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)]
-        self._configure_rip(res_infls)
-        # Allocate wormholes
-        self._configure_w()
-        # Allocate anomalies and blanks
-        abs = [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)]
-        random.shuffle(abs)
-        abs[4] = (abs[4][0] + 1, abs[4][1], abs[4][2] + 1)
-        self._configure_ab(abs)
-
-    # Six player configuration
-    #   Place Mecatol Rex and two blanks in shared_planets
-    #   Allocate one wormhole to each of players 1-4
-    #   Allocate two random anomalies, one each, to players 5-6
-    #   Allocate three anomalies to random players
-    #   Allocate three blanks to remaining 3 players
-    def _configure_6_players(self):
-        self.num_tiles = 5
-        res_infls = [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)]
-        self._configure_rip(res_infls)
-        # Allocate wormholes
-        self._configure_w()
-        # Allocate anomalies and blanks
-        abs = [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)]
-        random.shuffle(abs)
-        abs[4] = (abs[4][0] + 1, abs[4][1] + 1, abs[4][2])
-        abs[5] = (abs[5][0] + 1, abs[5][1] + 1, abs[5][2])
-        self._configure_ab(abs)
-
 
 # Print out planets given a vector of planet indices
 def print_planets(name, planets):
