@@ -303,7 +303,7 @@ def print_planets(name, planets):
         total_influence = total_influence + influence[ii]
         print("  Name: {:22}; Resource: {}; Influence: {}; {}{}{}".
               format(names[ii], resource[ii], influence[ii], worm, anom, blnk))
-    print("  Number of planets {}, total resource: {}, total influence {}".
+    print("  Number of systems {}, total resource: {}, total influence {}".
           format(num_planets, total_resource, total_influence))
 
 # Select tiles for each player for a given number of players
