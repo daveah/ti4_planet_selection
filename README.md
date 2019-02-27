@@ -1,7 +1,7 @@
 # ti4_planet_selection
 Allocate system tiles with balanced resource and influence for Twilight Imperium 4
 
-Use from the command line with a single parameter, -n, to specify the number of players (only 4, 5, 6 are supported).
+Use from the command line with a single parameter, to specify the number of players (only 4, 5, 6 are supported).
 
 The script will allocate wormholes, anomalies and blank tiles using a simple heuristic to mean that each player has a similar total number of non-planet tiles, and each player has at most one wormhole.
 

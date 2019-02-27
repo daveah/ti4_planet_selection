@@ -61,6 +61,7 @@ blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
 # Planets scoring 1, 1 on resource and influence
 lowest = [ii for ii in range(0, len(tiles)) if tiles[ii][1] == 1 and tiles[ii][2] == 1]
 
+
 # Hold a set of results
 class Results:
     # Vector of amount of resources for each player
@@ -101,9 +102,9 @@ class Results:
                                    format(player_num))
             self.player_planets[player_num].append(planet_num)
             self.player_resource[player_num] = (
-                self.player_resource[player_num] - resource[planet_num])
+                    self.player_resource[player_num] - resource[planet_num])
             self.player_influence[player_num] = (
-                self.player_influence[player_num] - influence[planet_num])
+                    self.player_influence[player_num] - influence[planet_num])
         else:
             self.shared_planets.append(planet_num)
 
@@ -138,8 +139,8 @@ class Results:
             return False
         # Terminate on success if we have successfully allocated everything
         if (num_planets == 0 and
-            resources_required == 0 and
-            influence_required == 0):
+                resources_required == 0 and
+                influence_required == 0):
             for planet in player_planets:
                 self.allocate_planet(planet, player_num)
             return True
@@ -156,7 +157,7 @@ class Results:
             candidate_tile = new_unused_tiles[0]
             new_unused_tiles = new_unused_tiles[1:]
             # Take a deep copy so the loop throws away failed allocations
-            new_player_planets = player_planets.copy()
+            new_player_planets = list(player_planets)
             new_player_planets.append(candidate_tile)
             # Recurse, on false remove first tile
             if self.fill_player(player_num, new_unused_tiles,
@@ -168,7 +169,7 @@ class Results:
     # Configure the results and allocate special tiles depending on number of players
     def configure(self, num_players):
         if num_players == 4:
-             self.configure_4_players()
+            self.configure_4_players()
         elif num_players == 5:
             self.configure_5_players()
         elif num_players == 6:
@@ -199,7 +200,7 @@ class Results:
         num_anoms = [ab[1] for ab in abs]
         num_blank = [ab[2] for ab in abs]
         # Allocate reds to fixed players
-        reds = anomaly.copy()
+        reds = list(anomaly)
         random.shuffle(reds)
         for ii in range(0, len(num_anoms)):
             for jj in range(0, num_anoms[ii]):
@@ -207,7 +208,7 @@ class Results:
                 reds = reds[1:]
                 num_total[ii] = num_total[ii] - 1
         # Allocate blanks to fixed players
-        blanks = blank.copy()
+        blanks = list(blank)
         for ii in range(0, len(abs)):
             for jj in range(0, num_blank[ii]):
                 self.allocate_planet(blanks[0], ii)
@@ -282,6 +283,7 @@ class Results:
             if not uu:
                 raise RuntimeError("Unused tiles")
 
+
 # Print out planets given a vector of planet indices
 def print_planets(name, planets):
     print(name)
@@ -305,6 +307,7 @@ def print_planets(name, planets):
     print("  Number of planets {}, total resource: {}, total influence {}".
           format(num_planets, total_resource, total_influence))
 
+
 # Select tiles for each player for a given number of players
 def ti4_planet_selection(num_players):
     results = None
@@ -319,15 +322,16 @@ def ti4_planet_selection(num_players):
     results.check_all_used()
     print_planets("Shared planets:", results.shared_planets)
     for nn in range(0, num_players):
-        print_planets("Player {}".format(nn+1), results.player_planets[nn])
+        print_planets("Player {}".format(nn + 1), results.player_planets[nn])
+
 
 # Main function
-# TODO: switch to ArgParse
 def main():
     parser = argparse.ArgumentParser(description="Allocate tiles for TI4")
-    parser.add_argument("-n", "--num_players", required=True, type=int, choices=[4, 5, 6])
+    parser.add_argument("num_players", type=int, choices=[4, 5, 6])
     args = parser.parse_args()
     ti4_planet_selection(args.num_players)
+
 
 if __name__ == "__main__":
     main()
