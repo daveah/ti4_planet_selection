@@ -64,21 +64,21 @@ lowest = [ii for ii in range(0, len(tiles)) if tiles[ii][1] == 1 and tiles[ii][2
 # Hold a set of results
 class Results:
     # Vector of amount of resources for each player
-    player_resource = []
+    player_resource = None
     # Vector of amount of inflience for each player
-    player_influence = []
+    player_influence = None
     # Vector of planets indices for each player
-    player_planets = []
+    player_planets = None
     # Number of tiles to be allocated to each player
     num_tiles = 0
     # Tiles that are considered "shared"
     #   Includes Mecatol Rex,
     #   one tile to be placed next to Mecatol Rex in 5 player game and
     #   unused tiles
-    shared_planets = [0]
+    shared_planets = None
     # Vector of whether a tile has been allocated
     #   set to zero for unallocated, one for allocated
-    used = []
+    used = None
 
     def __init__(self, num_players):
         self.player_resource = None
