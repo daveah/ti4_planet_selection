@@ -175,7 +175,7 @@ class Results:
     # Configure the results and allocate special tiles depending on number of players
     def _configure(self, num_players):
         if num_players == 4:
-            self.configure_4_players()
+            self._configure_4_players()
         elif num_players == 5:
             self._configure_5_players()
         elif num_players == 6:
