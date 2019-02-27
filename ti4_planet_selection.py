@@ -56,14 +56,13 @@ tiles = [
 #    "specials_shuffled": [(total_specials_player_n, min_anomolies_player_n, min_blanks_player_n), ...],
 #    # Allocation of specials fixed to a given player number
 #    "specials_fixed": [(total_specials_player_1, min_anomolies_player_1, min_blanks_player_1), ...],
-#    [])
+#   }
+#   "num_shared_tiles" and "specials_fixed" are optional
 allocations = {
     4: {
         "num_tiles": 8,
-        "num_shared_planets": 0,
         "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
         "specials_shuffled": [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
-        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
     },
     5: {
         "num_tiles": 6,
@@ -74,7 +73,6 @@ allocations = {
     },
     6: {
         "num_tiles": 5,
-        "num_shared_planets": 0,
         "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
         "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
@@ -214,10 +212,11 @@ class Results:
         # Set the number of tiles to allocate to each player
         self.num_tiles = player_allocations["num_tiles"]
         # Pull out a given number of the lowest value tiles at random
-        low = list(lowest)
-        random.shuffle(low)
-        for ii in range(0, player_allocations["num_shared_planets"]):
-            self._allocate_planet(low[ii], -1)
+        if "num_shared_planets" in player_allocations:
+            low = list(lowest)
+            random.shuffle(low)
+            for ii in range(0, player_allocations["num_shared_planets"]):
+                self._allocate_planet(low[ii], -1)
         # Set resources and influence budget for each player
         self._configure_rip(list(player_allocations["resource_influence_allocations"]))
         # Allocate wormholes to the players
@@ -225,13 +224,19 @@ class Results:
         # Specials are allocated in two sets, one randomised, and one fixed
         # left over specials are put in shared_planets
         specials_r = list(player_allocations["specials_shuffled"])
-        specials_f = list(player_allocations["specials_fixed"])
         random.shuffle(specials_r)
-        specials = [(
-            specials_r[ii][0] + specials_f[ii][0],
-            specials_r[ii][1] + specials_f[ii][1],
-            specials_r[ii][2] + specials_f[ii][2]
-            ) for ii in range(0, num_players)]
+        specials = None
+        if "specials_fixed" in player_allocations:
+            specials_f = list(player_allocations["specials_fixed"])
+            specials = [
+                (
+                    specials_r[ii][0] + specials_f[ii][0],
+                    specials_r[ii][1] + specials_f[ii][1],
+                    specials_r[ii][2] + specials_f[ii][2]
+                ) for ii in range(0, num_players)
+            ]
+        else:
+            specials = specials_r
         self._configure_ab(specials)
 
     # Given a vector of tuples of (resource, influence) set up internal vectors
