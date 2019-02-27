@@ -228,11 +228,13 @@ class Results:
         specials = None
         if "specials_fixed" in player_allocations:
             specials_f = list(player_allocations["specials_fixed"])
-            specials = [(
-                specials_r[ii][0] + specials_f[ii][0],
-                specials_r[ii][1] + specials_f[ii][1],
-                specials_r[ii][2] + specials_f[ii][2]
-            ) for ii in range(0, num_players)]
+            specials = [
+                (
+                    specials_r[ii][0] + specials_f[ii][0],
+                    specials_r[ii][1] + specials_f[ii][1],
+                    specials_r[ii][2] + specials_f[ii][2]
+                ) for ii in range(0, num_players)
+            ]
         else:
             specials = specials_r
         self._configure_ab(specials)
