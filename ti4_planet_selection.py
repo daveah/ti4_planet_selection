@@ -87,7 +87,7 @@ class Results:
         self.shared_planets = []
         self.used = [0 for ii in range(0, len(tiles))]
         self._allocate_planet(0, -1)
-        self.configure(num_players)
+        self._configure(num_players)
 
     # Allocate a planet to a given player (-1 for shared)
     def _allocate_planet(self, planet_num, player_num):
