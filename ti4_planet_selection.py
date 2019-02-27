@@ -46,28 +46,39 @@ tiles = [
 ]
 
 # allocations of tiles by number of players
-#   dictionary of player number to a tuple of allocations
-#   (number_of_tiles_per_player, number_of_low_value_tiles_in_shared,
-#    [(resource_allocation_player_1, influence_allocation_player_1), ...],
+#   dictionary of player number to a dictionary of allocations
+#   {
+#    "num_tiles": number_of_tiles_per_player,
+#    "num_shared_planets": number_of_low_value_tiles_in_shared,
+#    "resource_influence_allocations": [(resource_allocation_player_1, influence_allocation_player_1), ...],
 #    # Wormholes will be allocated to first <num_wormholes> players
 #    # Allocation of specials (other than wormholes) to be randomly shuffled
-#    [(total_specials_player_n, min_anomolies_player_n, min_blanks_player_n), ...],
+#    "specials_shuffled": [(total_specials_player_n, min_anomolies_player_n, min_blanks_player_n), ...],
 #    # Allocation of specials fixed to a given player number
-#    [(total_specials_player_1, min_anomolies_player_1, min_blanks_player_1), ...],
+#    "specials_fixed": [(total_specials_player_1, min_anomolies_player_1, min_blanks_player_1), ...],
 #    [])
 allocations = {
-    4: (8, 0,
-        [(11, 13), (11, 12), (12, 12), (12, 12)],
-        [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
-        [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]),
-    5: (6, 1,
-        [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
-        [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
-        [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]),
-    6: (5, 0,
-        [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
-        [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
-        [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)])
+    4: {
+        "num_tiles": 8,
+        "num_shared_planets": 0,
+        "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
+        "specials_shuffled": [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
+        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)]
+    },
+    5: {
+        "num_tiles": 6,
+        "num_shared_planets": 1,
+        "resource_influence_allocations": [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
+        "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
+        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]
+    },
+    6: {
+        "num_tiles": 5,
+        "num_shared_planets": 0,
+        "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
+        "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
+        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
+    }
 }
 
 # Extract reference data into working vectors
@@ -201,20 +212,20 @@ class Results:
     def _configure(self, num_players):
         player_allocations = allocations[num_players]
         # Set the number of tiles to allocate to each player
-        self.num_tiles = player_allocations[0]
+        self.num_tiles = player_allocations["num_tiles"]
         # Pull out a given number of the lowest value tiles at random
         low = list(lowest)
         random.shuffle(low)
-        for ii in range(0, player_allocations[1]):
+        for ii in range(0, player_allocations["num_shared_planets"]):
             self._allocate_planet(low[ii], -1)
         # Set resources and influence budget for each player
-        self._configure_rip(list(player_allocations[2]))
+        self._configure_rip(list(player_allocations["resource_influence_allocations"]))
         # Allocate wormholes to the players
         self._configure_w(num_players)
         # Specials are allocated in two sets, one randomised, and one fixed
         # left over specials are put in shared_planets
-        specials_r = list(player_allocations[3])
-        specials_f = list(player_allocations[4])
+        specials_r = list(player_allocations["specials_shuffled"])
+        specials_f = list(player_allocations["specials_fixed"])
         random.shuffle(specials_r)
         specials = [(
             specials_r[ii][0] + specials_f[ii][0],
