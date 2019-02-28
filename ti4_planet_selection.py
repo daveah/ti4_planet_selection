@@ -49,7 +49,6 @@ tiles = [
 #   dictionary of player number to a dictionary of allocations
 #   {
 #    "num_tiles": number_of_tiles_per_player,
-#    "num_shared_planets": number_of_low_value_tiles_in_shared,
 #    "resource_influence_allocations": [(resource_allocation_player_1, influence_allocation_player_1), ...],
 #    # Wormholes will be allocated to first <num_wormholes> players
 #    # Allocation of specials (other than wormholes) to be randomly shuffled
@@ -57,7 +56,7 @@ tiles = [
 #    # Allocation of specials fixed to a given player number
 #    "specials_fixed": [(total_specials_player_1, min_anomolies_player_1, min_blanks_player_1), ...],
 #   }
-#   "num_shared_tiles" and "specials_fixed" are optional
+#   "specials_fixed" is optional
 allocations = {
     4: {
         "num_tiles": 8,
@@ -66,7 +65,6 @@ allocations = {
     },
     5: {
         "num_tiles": 6,
-        "num_shared_planets": 1,
         "resource_influence_allocations": [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
         "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]
@@ -76,8 +74,8 @@ allocations = {
         "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
         "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
-    }
-}
+    },
+ }
 
 # Extract reference data into working vectors
 # All tile names
@@ -92,9 +90,6 @@ wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][3]]
 anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
 # Indices of blank systems
 blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
-# Planets scoring 1, 1 on resource and influence
-lowest = [ii for ii in range(0, len(tiles)) if tiles[ii][1] == 1 and tiles[ii][2] == 1]
-
 
 # Hold a set of results
 class Results:
@@ -154,11 +149,11 @@ class Results:
                 return False
         return True
 
-    # Ensure that we have no left over planets
+    # Sweep unused tiles into shared_planets
     def check_all_used(self):
-        for uu in self.used:
-            if not uu:
-                raise RuntimeError("Unused tiles")
+        for ii in range(0, len(self.used)):
+            if not self.used[ii]:
+                self._allocate_planet(ii, -1)
 
     # Return a shuffled vector of unused tile indices
     def _get_unused_vector(self):
@@ -211,12 +206,6 @@ class Results:
         player_allocations = allocations[num_players]
         # Set the number of tiles to allocate to each player
         self.num_tiles = player_allocations["num_tiles"]
-        # Pull out a given number of the lowest value tiles at random
-        if "num_shared_planets" in player_allocations:
-            low = list(lowest)
-            random.shuffle(low)
-            for ii in range(0, player_allocations["num_shared_planets"]):
-                self._allocate_planet(low[ii], -1)
         # Set resources and influence budget for each player
         self._configure_rip(list(player_allocations["resource_influence_allocations"]))
         # Allocate wormholes to the players
@@ -309,7 +298,6 @@ def print_planets(name, planets):
     print("  Number of systems {}, total resource: {}, total influence {}".
           format(num_planets, total_resource, total_influence))
 
-
 # Select tiles for each player for a given number of players
 def ti4_planet_selection(num_players):
     results = None
@@ -326,14 +314,12 @@ def ti4_planet_selection(num_players):
     for nn in range(0, num_players):
         print_planets("Player {}".format(nn + 1), results.player_planets[nn])
 
-
 # Main function
 def main():
     parser = argparse.ArgumentParser(description="Allocate tiles for TI4")
-    parser.add_argument("num_players", type=int, choices=[4, 5, 6])
+    parser.add_argument("num_players", type=int, choices=sorted(list(allocations.keys())))
     args = parser.parse_args()
     ti4_planet_selection(args.num_players)
-
 
 if __name__ == "__main__":
     main()
