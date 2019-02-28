@@ -74,8 +74,8 @@ allocations = {
         "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
         "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
-    }
-}
+    },
+ }
 
 # Extract reference data into working vectors
 # All tile names
@@ -298,7 +298,6 @@ def print_planets(name, planets):
     print("  Number of systems {}, total resource: {}, total influence {}".
           format(num_planets, total_resource, total_influence))
 
-
 # Select tiles for each player for a given number of players
 def ti4_planet_selection(num_players):
     results = None
@@ -315,15 +314,12 @@ def ti4_planet_selection(num_players):
     for nn in range(0, num_players):
         print_planets("Player {}".format(nn + 1), results.player_planets[nn])
 
-
 # Main function
 def main():
-    #print(keys(allocations).sort())
     parser = argparse.ArgumentParser(description="Allocate tiles for TI4")
-    parser.add_argument("num_players", type=int, choices=allocations.keys())
+    parser.add_argument("num_players", type=int, choices=sorted(list(allocations.keys())))
     args = parser.parse_args()
     ti4_planet_selection(args.num_players)
-
 
 if __name__ == "__main__":
     main()
