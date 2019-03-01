@@ -44,6 +44,38 @@ tiles = [
     ("Blank", 0, 0, False, False, True),
 ]
 
+# allocations of tiles by number of players
+#   dictionary of player number to a dictionary of allocations
+#   {
+#    "num_tiles": number_of_tiles_per_player,
+#    "resource_influence_allocations": [(resource_allocation_player_1, influence_allocation_player_1), ...],
+#    # Wormholes will be allocated to first <num_wormholes> players
+#    # Allocation of specials (other than wormholes) to be randomly shuffled
+#    "specials_shuffled": [(total_specials_player_n, min_anomolies_player_n, min_blanks_player_n), ...],
+#    # Allocation of specials fixed to a given player number
+#    "specials_fixed": [(total_specials_player_1, min_anomolies_player_1, min_blanks_player_1), ...],
+#   }
+#   "specials_fixed" is optional
+allocations = {
+    4: {
+        "num_tiles": 8,
+        "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
+        "specials_shuffled": [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
+    },
+    5: {
+        "num_tiles": 6,
+        "resource_influence_allocations": [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
+        "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
+        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]
+    },
+    6: {
+        "num_tiles": 5,
+        "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
+        "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
+        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
+    },
+ }
+
 # Extract reference data into working vectors
 # All tile names
 names = [tile[0] for tile in tiles]
@@ -57,9 +89,6 @@ wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][3]]
 anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
 # Indices of blank systems
 blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
-# Planets scoring 1, 1 on resource and influence
-lowest = [ii for ii in range(0, len(tiles)) if tiles[ii][1] == 1 and tiles[ii][2] == 1]
-
 
 # Hold a set of results
 class Results:
@@ -119,11 +148,11 @@ class Results:
                 return False
         return True
 
-    # Ensure that we have no left over planets
+    # Sweep unused tiles into shared_planets
     def check_all_used(self):
-        for uu in self.used:
-            if not uu:
-                raise RuntimeError("Unused tiles")
+        for ii in range(0, len(self.used)):
+            if not self.used[ii]:
+                self._allocate_planet(ii, -1)
 
     # Return a shuffled vector of unused tile indices
     def _get_unused_vector(self):
@@ -173,14 +202,30 @@ class Results:
 
     # Configure the results and allocate special tiles depending on number of players
     def _configure(self, num_players):
-        if num_players == 4:
-            self._configure_4_players()
-        elif num_players == 5:
-            self._configure_5_players()
-        elif num_players == 6:
-            self._configure_6_players()
+        player_allocations = allocations[num_players]
+        # Set the number of tiles to allocate to each player
+        self.num_tiles = player_allocations["num_tiles"]
+        # Set resources and influence budget for each player
+        self._configure_rip(list(player_allocations["resource_influence_allocations"]))
+        # Allocate wormholes to the players
+        self._configure_w(num_players)
+        # Specials are allocated in two sets, one randomised, and one fixed
+        # left over specials are put in shared_planets
+        specials_r = list(player_allocations["specials_shuffled"])
+        random.shuffle(specials_r)
+        specials = None
+        if "specials_fixed" in player_allocations:
+            specials_f = list(player_allocations["specials_fixed"])
+            specials = [
+                (
+                    specials_r[ii][0] + specials_f[ii][0],
+                    specials_r[ii][1] + specials_f[ii][1],
+                    specials_r[ii][2] + specials_f[ii][2]
+                ) for ii in range(0, num_players)
+            ]
         else:
-            raise RuntimeError("Invalid number of players: {}".format(num_players))
+            specials = specials_r
+        self._configure_ab(specials)
 
     # Given a vector of tuples of (resource, influence) set up internal vectors
     #   for resource, influence and player_planets
@@ -190,10 +235,10 @@ class Results:
         self.player_influence = [res_infl[1] for res_infl in res_infls]
         self.player_planets = [[] for res_infl in res_infls]
 
-    # Configure wormholes, allocating to first 4 players
-    def _configure_w(self):
-        for ii in range(0, 4):
-            self._allocate_planet(wormhole[ii], ii)
+    # Configure wormholes, allocating evenly to players
+    def _configure_w(self, num_players):
+        for ii in range(0, len(wormhole)):
+            self._allocate_planet(wormhole[ii], ii % num_players)
 
     # Given a vector of tuples configure anomalies and blanks
     #   the tuples are (total number of anomalies and blanks,

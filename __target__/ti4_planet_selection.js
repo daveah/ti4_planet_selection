@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-03-01 16:35:38
+// Transcrypt'ed from Python, 2019-03-01 16:38:26
 var random = {};
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 import * as __module_random__ from './random.js';
@@ -6,6 +6,7 @@ __nest__ (random, '', __module_random__);
 var __name__ = '__main__';
 export var num_iterations = 100;
 export var tiles = [tuple (['Mecatol Rex', 1, 6, false, false, false]), tuple (['Bereg, Lirta IV', 5, 4, false, false, false]), tuple (['Abyz, Fria', 5, 0, false, false, false]), tuple (['New Albion, Starpoint', 4, 2, false, false, false]), tuple (['Arnor, Lor', 3, 3, false, false, false]), tuple (['Mellon, Zohbat', 3, 3, false, false, false]), tuple (['Corneeq, Resculon', 3, 2, false, false, false]), tuple (['Lodor', 3, 1, true, false, false]), tuple (['Lazar, Sakulag', 3, 1, false, false, false]), tuple (['Centauri, Gral', 2, 4, false, false, false]), tuple (["Tequ'ran, Torkan", 2, 3, false, false, false]), tuple (['Vefut II', 2, 2, false, false, false]), tuple (['Saudor', 2, 2, false, false, false]), tuple (['Quann', 2, 1, true, false, false]), tuple (['Arinam, Meer', 1, 6, false, false, false]), tuple (["Qucen'n, Rarron", 1, 5, false, false, false]), tuple (['Mehar Xull', 1, 3, false, false, false]), tuple (['Dal Bootha, Xxehan', 1, 3, false, false, false]), tuple (['Wellon', 1, 2, false, false, false]), tuple (["Tar'mann", 1, 1, false, false, false]), tuple (['Thibah', 1, 1, false, false, false]), tuple (['A Wormhole', 0, 0, true, false, false]), tuple (['B Wormhole', 0, 0, true, false, false]), tuple (['Asteroid Field', 0, 0, false, true, false]), tuple (['Asteroid Field', 0, 0, false, true, false]), tuple (['Supernova', 0, 0, false, true, false]), tuple (['Nebula', 0, 0, false, true, false]), tuple (['Gravity Rift', 0, 0, false, true, false]), tuple (['Blank', 0, 0, false, false, true]), tuple (['Blank', 0, 0, false, false, true]), tuple (['Blank', 0, 0, false, false, true]), tuple (['Blank', 0, 0, false, false, true]), tuple (['Blank', 0, 0, false, false, true])];
+export var allocations = dict ({4: dict ({'num_tiles': 8, 'resource_influence_allocations': [tuple ([11, 13]), tuple ([11, 12]), tuple ([12, 12]), tuple ([12, 12])], 'specials_shuffled': [tuple ([3, 1, 1]), tuple ([3, 1, 1]), tuple ([2, 1, 1]), tuple ([2, 1, 1])]}), 5: dict ({'num_tiles': 6, 'resource_influence_allocations': [tuple ([9, 10]), tuple ([9, 10]), tuple ([9, 10]), tuple ([9, 9]), tuple ([9, 9])], 'specials_shuffled': [tuple ([2, 1, 1]), tuple ([2, 1, 1]), tuple ([2, 1, 1]), tuple ([1, 1, 0]), tuple ([1, 1, 0])], 'specials_fixed': [tuple ([0, 0, 0]), tuple ([0, 0, 0]), tuple ([0, 0, 0]), tuple ([0, 0, 0]), tuple ([1, 0, 1])]}), 6: dict ({'num_tiles': 5, 'resource_influence_allocations': [tuple ([8, 8]), tuple ([8, 8]), tuple ([8, 8]), tuple ([8, 8]), tuple ([7, 8]), tuple ([7, 9])], 'specials_shuffled': [tuple ([1, 1, 0]), tuple ([1, 1, 0]), tuple ([1, 1, 0]), tuple ([1, 0, 1]), tuple ([1, 0, 1]), tuple ([1, 0, 1])], 'specials_fixed': [tuple ([0, 0, 0]), tuple ([0, 0, 0]), tuple ([0, 0, 0]), tuple ([0, 0, 0]), tuple ([1, 1, 0]), tuple ([1, 1, 0])]})});
 export var names = (function () {
 	var __accu0__ = [];
 	for (var tile of tiles) {
@@ -49,15 +50,6 @@ export var blank = (function () {
 	var __accu0__ = [];
 	for (var ii = 0; ii < len (tiles); ii++) {
 		if (tiles [ii] [5]) {
-			__accu0__.append (ii);
-		}
-	}
-	return __accu0__;
-}) ();
-export var lowest = (function () {
-	var __accu0__ = [];
-	for (var ii = 0; ii < len (tiles); ii++) {
-		if (tiles [ii] [1] == 1 && tiles [ii] [2] == 1) {
 			__accu0__.append (ii);
 		}
 	}
@@ -116,11 +108,9 @@ export var Results =  __class__ ('Results', [object], {
 		return true;
 	});},
 	get check_all_used () {return __get__ (this, function (self) {
-		for (var uu of self.used) {
-			if (!(uu)) {
-				var __except0__ = RuntimeError ('Unused tiles');
-				__except0__.__cause__ = null;
-				throw __except0__;
+		for (var ii = 0; ii < len (self.used); ii++) {
+			if (!(self.used [ii])) {
+				self._allocate_planet (ii, -(1));
 			}
 		}
 	});},
@@ -171,20 +161,27 @@ export var Results =  __class__ ('Results', [object], {
 		}
 	});},
 	get _configure () {return __get__ (this, function (self, num_players) {
-		if (num_players == 4) {
-			self._configure_4_players ();
-		}
-		else if (num_players == 5) {
-			self._configure_5_players ();
-		}
-		else if (num_players == 6) {
-			self._configure_6_players ();
+		var player_allocations = allocations [num_players];
+		self.num_tiles = player_allocations ['num_tiles'];
+		self._configure_rip (list (player_allocations ['resource_influence_allocations']));
+		self._configure_w (num_players);
+		var specials_r = list (player_allocations ['specials_shuffled']);
+		random.shuffle (specials_r);
+		var specials = null;
+		if (__in__ ('specials_fixed', player_allocations)) {
+			var specials_f = list (player_allocations ['specials_fixed']);
+			var specials = (function () {
+				var __accu0__ = [];
+				for (var ii = 0; ii < num_players; ii++) {
+					__accu0__.append (tuple ([specials_r [ii] [0] + specials_f [ii] [0], specials_r [ii] [1] + specials_f [ii] [1], specials_r [ii] [2] + specials_f [ii] [2]]));
+				}
+				return __accu0__;
+			}) ();
 		}
 		else {
-			var __except0__ = RuntimeError ('Invalid number of players: {}'.format (num_players));
-			__except0__.__cause__ = null;
-			throw __except0__;
+			var specials = specials_r;
 		}
+		self._configure_ab (specials);
 	});},
 	get _configure_rip () {return __get__ (this, function (self, res_infls) {
 		random.shuffle (res_infls);
@@ -210,9 +207,9 @@ export var Results =  __class__ ('Results', [object], {
 			return __accu0__;
 		}) ();
 	});},
-	get _configure_w () {return __get__ (this, function (self) {
-		for (var ii = 0; ii < 4; ii++) {
-			self._allocate_planet (wormhole [ii], ii);
+	get _configure_w () {return __get__ (this, function (self, num_players) {
+		for (var ii = 0; ii < len (wormhole); ii++) {
+			self._allocate_planet (wormhole [ii], __mod__ (ii, num_players));
 		}
 	});},
 	get _configure_ab () {return __get__ (this, function (self, abs) {
