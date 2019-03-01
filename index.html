@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TI4 Planet Stack Generator</title>
+    <script type="module">import * as ti4 from './__target__/ti4_planet_selection.js'; window.ti4 = ti4;</script>
+</head>
+<body>
+<h1>TI4 Planet Stack Generator</h1>
+
+    <div id = "greet">Select the number of players</div>
+    <select id = 'number_players'>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+
+    </select>
+    <button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value)">Create the planets</button>
+
+    <div id="output"></div>
+</body>
+</html>
+

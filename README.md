@@ -8,3 +8,11 @@ The script will allocate wormholes, anomalies and blank tiles using a simple heu
 The available resource and influence is balanced across all players, and a simple recursive backtracking alogrithm used to pick a randomised set of tiles that balances resource and influence between players.  Technology, planet traits, and number of planets are not balanced.
 
 Tile descriptions, and the heuristics to allocate non-planet tiles are factored out to ease upgrades when TI4 expansions are released.
+
+## Compilation
+
+You can compile the python code by running
+
+```bash
+python -m transcrypt -b -m -n ti4_planet_selection.py 
+```
