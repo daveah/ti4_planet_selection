@@ -13,7 +13,8 @@ def main():
         "System Pre": "  ",
         "System Post": "\n",
         "Summary Pre": "  ",
-        "Summary Post": "\n"
+        "Summary Post": "\n",
+        "Planet Formatter": "{:22}",
     }
     print(ti4_planet_selection(args.num_players, formatter))
 

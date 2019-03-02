@@ -301,9 +301,11 @@ def print_planets(name, planets, formatter):
             blnk = "B"
         total_resource = total_resource + resource[ii]
         total_influence = total_influence + influence[ii]
+        planet_name = formatter["Planet Formatter"].format(
+            names[ii])
         output = (output +
             "{}Name: {}; Resource: {}; Influence: {}; {}{}{}{}".
-            format(formatter["System Pre"], names[ii], resource[ii],
+            format(formatter["System Pre"], planet_name, resource[ii],
             influence[ii], worm, anom, blnk, formatter["System Post"]))
     output = (output +
         ("{}Number of systems {}, total resource: {}, " +
@@ -323,7 +325,8 @@ def ti4_planet_selection(num_players, formatter = None):
             "System Pre": "<p>",
             "System Post": "</p>",
             "Summary Pre": "<p><i>",
-            "Summary Post": "</i></p>"
+            "Summary Post": "</i></p>",
+            "Planet Formatter": "{}",
         }
     results = None
     success = False
