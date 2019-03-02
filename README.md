@@ -23,3 +23,11 @@ Secondly, each player in turn takes a shuffled deck of remaining tiles (all plan
 
 ## Upgrading for expansions
 Upgrades to new expansions should be possible by reconfiguring the 2 data structures and 2 global variable at the top of the file.  New tiles should be entered into the tiles vector.  When allocating tiles for a given number of players, left over tiles are automatically swept into the shared pile.  The allocations vector should be populated with the number of tiles per player, the allocations of resource and influence per player, and the allocations of special tiles.  Special tiles are allocated in 3 passes.  All wormhole tiles are allocated to the first <num_wormholes> players.  If <num_wormholes> is greater than the number of players this wraps around.  Then a set of special tiles are allocated to random players.  Finally a set of special tiles are allocated to fixed player numbers - this is intended to allow the number of special tiles to be balanced, even though the wormholes are allocated to fixed positions.  An error will be thrown if the resources and influence allocations create something that doesn't converge.  In this case, adjust resource and influence accordingly.
+
+## Compilation
+
+You can compile the python code by running
+
+```bash
+python -m transcrypt -b -m -n _ti4_planet_selection.py 
+```
