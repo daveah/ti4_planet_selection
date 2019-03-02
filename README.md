@@ -29,5 +29,5 @@ Upgrades to new expansions should be possible by reconfiguring the 2 data struct
 You can compile the python code by running
 
 ```bash
-python -m transcrypt -b -m -n ti4_planet_selection.py 
+python -m transcrypt -b -m -n _ti4_planet_selection.py 
 ```

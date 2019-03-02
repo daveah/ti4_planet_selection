@@ -237,8 +237,12 @@ class Results:
 
     # Configure wormholes, allocating evenly to players
     def _configure_w(self, num_players):
+        jj = 0
         for ii in range(0, len(wormhole)):
-            self._allocate_planet(wormhole[ii], ii % num_players)
+            self._allocate_planet(wormhole[ii], jj)
+            jj = jj + 1
+            if jj >= num_players:
+                jj = 0
 
     # Given a vector of tuples configure anomalies and blanks
     #   the tuples are (total number of anomalies and blanks,
@@ -266,7 +270,7 @@ class Results:
                 num_total[ii] = num_total[ii] - 1
         # Allocate remaining tiles randomly to players with allocation
         remain = list(reds)
-        remain.append(blanks)
+        remain.extend(blanks)
         random.shuffle(remain)
         for ii in range(0, len(num_total)):
             for jj in range(0, num_total[ii]):
@@ -275,64 +279,13 @@ class Results:
         for rem in remain:
             self._allocate_planet(rem, -1)
 
-    # Four player configuration
-    #   Place Mecatol Rex in shared_planets
-    #   Allocate one wormhole to each player
-    #   Allocate one random anomaly to each player, the 5th to a random player
-    #   Allocate one blank to each player, the 5th to a random player
-    #   The random players selected for the 5th anomaly and blank should be different
-    def _configure_4_players(self):
-        self.num_tiles = 8
-        res_infls = [(11, 13), (11, 12), (12, 12), (12, 12)]
-        self._configure_rip(res_infls)
-        # Allocate wormholes
-        self._configure_w();
-        # Allocate anomalies and blanks
-        abs = [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)]
-        random.shuffle(abs)
-        self._configure_ab(abs)
-
-    # Five player configuration
-    #   Place Mecatol Rex, one (1, 1) planet and a blank in shared_planets
-    #   Allocate one wormhole to each of players 1-4
-    #   Allocate one random anomaly to each player
-    #   Allocate one blank to player 5, the remainder to 3 random players
-    def _configure_5_players(self):
-        self.num_tiles = 6
-        self._allocate_planet(lowest[random.randint(0, 1)], -1)
-        res_infls = [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)]
-        self._configure_rip(res_infls)
-        # Allocate wormholes
-        self._configure_w()
-        # Allocate anomalies and blanks
-        abs = [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)]
-        random.shuffle(abs)
-        abs[4] = (abs[4][0] + 1, abs[4][1], abs[4][2] + 1)
-        self._configure_ab(abs)
-
-    # Six player configuration
-    #   Place Mecatol Rex and two blanks in shared_planets
-    #   Allocate one wormhole to each of players 1-4
-    #   Allocate two random anomalies, one each, to players 5-6
-    #   Allocate three anomalies to random players
-    #   Allocate three blanks to remaining 3 players
-    def _configure_6_players(self):
-        self.num_tiles = 5
-        res_infls = [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)]
-        self._configure_rip(res_infls)
-        # Allocate wormholes
-        self._configure_w()
-        # Allocate anomalies and blanks
-        abs = [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)]
-        random.shuffle(abs)
-        abs[4] = (abs[4][0] + 1, abs[4][1] + 1, abs[4][2])
-        abs[5] = (abs[5][0] + 1, abs[5][1] + 1, abs[5][2])
-        self._configure_ab(abs)
-
-
 # Print out planets given a vector of planet indices
-def print_planets(name, planets):
-    output = "<h2>{0}</h2>".format(name)
+def print_planets(name, planets, formatter):
+    output = "{}{}{}".format(
+        formatter["Title Pre"],
+        name,
+        formatter["Title Post"]
+    )
     total_resource = 0
     total_influence = 0
     num_planets = len(planets)
@@ -348,19 +301,33 @@ def print_planets(name, planets):
             blnk = "B"
         total_resource = total_resource + resource[ii]
         total_influence = total_influence + influence[ii]
-        output = output + "<p>Name: {}; Resource: {}; Influence: {}; {}{}{}</p>".format(names[ii], resource[ii],
-                                                                                           influence[ii], worm, anom,
-                                                                                           blnk)
-
-    output = output + "<p/><i>Number of systems {}, total resource: {}, total influence {}</i></p>".format(num_planets,
-                                                                                                       total_resource,
-                                                                                                       total_influence)
-
+        planet_name = formatter["Planet Formatter"].format(
+            names[ii])
+        output = (output +
+            "{}Name: {}; Resource: {}; Influence: {}; {}{}{}{}".
+            format(formatter["System Pre"], planet_name, resource[ii],
+            influence[ii], worm, anom, blnk, formatter["System Post"]))
+    output = (output +
+        ("{}Number of systems {}, total resource: {}, " +
+        "total influence {}{}").
+        format(formatter["Summary Pre"],
+        num_planets, total_resource, total_influence,
+        formatter["Summary Post"]))
     return output
 
-
 # Select tiles for each player for a given number of players
-def ti4_planet_selection(num_players):
+def ti4_planet_selection(num_players, formatter = None):
+    # By default use an html formatter
+    if formatter is None:
+        formatter = {
+            "Title Pre": "<h2>",
+            "Title Post": "</h2>",
+            "System Pre": "<p>",
+            "System Post": "</p>",
+            "Summary Pre": "<p><i>",
+            "Summary Post": "</i></p>",
+            "Planet Formatter": "{}",
+        }
     results = None
     success = False
     for num_attempts in range(0, num_iterations):
@@ -371,8 +338,16 @@ def ti4_planet_selection(num_players):
     if not success:
         raise RuntimeError("Unable to converge in {} iterations")
     results.check_all_used()
-    output = print_planets("Shared planets:", results.shared_planets)
+    output = print_planets("Shared planets:", results.shared_planets, formatter)
     for nn in range(0, num_players):
-        output = output + print_planets("Player {}".format(nn + 1), results.player_planets[nn])
+        output = (output +
+            print_planets("Player {}".
+                format(nn + 1),
+                results.player_planets[nn],
+                formatter))
 
     return output
+
+# Return a list of all possible player numbers
+def player_numbers():
+    return sorted(list(allocations.keys()))

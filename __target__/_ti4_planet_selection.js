@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-03-01 16:38:26
+// Transcrypt'ed from Python, 2019-03-02 10:16:02
 var random = {};
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __proxy__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, abs, all, any, assert, bool, bytearray, bytes, callable, chr, copy, deepcopy, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, input, int, isinstance, issubclass, len, list, map, max, min, object, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 import * as __module_random__ from './random.js';
@@ -208,8 +208,13 @@ export var Results =  __class__ ('Results', [object], {
 		}) ();
 	});},
 	get _configure_w () {return __get__ (this, function (self, num_players) {
+		var jj = 0;
 		for (var ii = 0; ii < len (wormhole); ii++) {
-			self._allocate_planet (wormhole [ii], __mod__ (ii, num_players));
+			self._allocate_planet (wormhole [ii], jj);
+			var jj = jj + 1;
+			if (jj >= num_players) {
+				var jj = 0;
+			}
 		}
 	});},
 	get _configure_ab () {return __get__ (this, function (self, abs) {
@@ -252,7 +257,7 @@ export var Results =  __class__ ('Results', [object], {
 			}
 		}
 		var remain = list (reds);
-		remain.append (blanks);
+		remain.extend (blanks);
 		random.shuffle (remain);
 		for (var ii = 0; ii < len (num_total); ii++) {
 			for (var jj = 0; jj < num_total [ii]; jj++) {
@@ -263,41 +268,10 @@ export var Results =  __class__ ('Results', [object], {
 		for (var rem of remain) {
 			self._allocate_planet (rem, -(1));
 		}
-	});},
-	get _configure_4_players () {return __get__ (this, function (self) {
-		self.num_tiles = 8;
-		var res_infls = [tuple ([11, 13]), tuple ([11, 12]), tuple ([12, 12]), tuple ([12, 12])];
-		self._configure_rip (res_infls);
-		self._configure_w ();
-		var abs = [tuple ([3, 1, 1]), tuple ([3, 1, 1]), tuple ([2, 1, 1]), tuple ([2, 1, 1])];
-		random.shuffle (abs);
-		self._configure_ab (abs);
-	});},
-	get _configure_5_players () {return __get__ (this, function (self) {
-		self.num_tiles = 6;
-		self._allocate_planet (lowest [random.randint (0, 1)], -(1));
-		var res_infls = [tuple ([9, 10]), tuple ([9, 10]), tuple ([9, 10]), tuple ([9, 9]), tuple ([9, 9])];
-		self._configure_rip (res_infls);
-		self._configure_w ();
-		var abs = [tuple ([2, 1, 1]), tuple ([2, 1, 1]), tuple ([2, 1, 1]), tuple ([1, 1, 0]), tuple ([1, 1, 0])];
-		random.shuffle (abs);
-		abs [4] = tuple ([abs [4] [0] + 1, abs [4] [1], abs [4] [2] + 1]);
-		self._configure_ab (abs);
-	});},
-	get _configure_6_players () {return __get__ (this, function (self) {
-		self.num_tiles = 5;
-		var res_infls = [tuple ([8, 8]), tuple ([8, 8]), tuple ([8, 8]), tuple ([8, 8]), tuple ([7, 8]), tuple ([7, 9])];
-		self._configure_rip (res_infls);
-		self._configure_w ();
-		var abs = [tuple ([1, 1, 0]), tuple ([1, 1, 0]), tuple ([1, 1, 0]), tuple ([1, 0, 1]), tuple ([1, 0, 1]), tuple ([1, 0, 1])];
-		random.shuffle (abs);
-		abs [4] = tuple ([abs [4] [0] + 1, abs [4] [1] + 1, abs [4] [2]]);
-		abs [5] = tuple ([abs [5] [0] + 1, abs [5] [1] + 1, abs [5] [2]]);
-		self._configure_ab (abs);
 	});}
 });
-export var print_planets = function (py_name, planets) {
-	var output = '<h2>{0}</h2>'.format (py_name);
+export var print_planets = function (py_name, planets, formatter) {
+	var output = '{}{}{}'.format (formatter ['Title Pre'], py_name, formatter ['Title Post']);
 	var total_resource = 0;
 	var total_influence = 0;
 	var num_planets = len (planets);
@@ -316,12 +290,19 @@ export var print_planets = function (py_name, planets) {
 		}
 		var total_resource = total_resource + resource [ii];
 		var total_influence = total_influence + influence [ii];
-		var output = output + '<p>Name: {}; Resource: {}; Influence: {}; {}{}{}</p>'.format (names [ii], resource [ii], influence [ii], worm, anom, blnk);
+		var planet_name = formatter ['Planet Formatter'].format (names [ii]);
+		var output = output + '{}Name: {}; Resource: {}; Influence: {}; {}{}{}{}'.format (formatter ['System Pre'], planet_name, resource [ii], influence [ii], worm, anom, blnk, formatter ['System Post']);
 	}
-	var output = output + '<p/><i>Number of systems {}, total resource: {}, total influence {}</i></p>'.format (num_planets, total_resource, total_influence);
+	var output = output + ('{}Number of systems {}, total resource: {}, ' + 'total influence {}{}').format (formatter ['Summary Pre'], num_planets, total_resource, total_influence, formatter ['Summary Post']);
 	return output;
 };
-export var ti4_planet_selection = function (num_players) {
+export var ti4_planet_selection = function (num_players, formatter) {
+	if (typeof formatter == 'undefined' || (formatter != null && formatter.hasOwnProperty ("__kwargtrans__"))) {;
+		var formatter = null;
+	};
+	if (formatter === null) {
+		var formatter = dict ({'Title Pre': '<h2>', 'Title Post': '</h2>', 'System Pre': '<p>', 'System Post': '</p>', 'Summary Pre': '<p><i>', 'Summary Post': '</i></p>', 'Planet Formatter': '{}'});
+	}
 	var results = null;
 	var success = false;
 	for (var num_attempts = 0; num_attempts < num_iterations; num_attempts++) {
@@ -337,11 +318,14 @@ export var ti4_planet_selection = function (num_players) {
 		throw __except0__;
 	}
 	results.check_all_used ();
-	var output = print_planets ('Shared planets:', results.shared_planets);
+	var output = print_planets ('Shared planets:', results.shared_planets, formatter);
 	for (var nn = 0; nn < num_players; nn++) {
-		var output = output + print_planets ('Player {}'.format (nn + 1), results.player_planets [nn]);
+		var output = output + print_planets ('Player {}'.format (nn + 1), results.player_planets [nn], formatter);
 	}
 	return output;
 };
+export var player_numbers = function () {
+	return sorted (list (allocations.py_keys ()));
+};
 
-//# sourceMappingURL=ti4_planet_selection.map
+//# sourceMappingURL=_ti4_planet_selection.map

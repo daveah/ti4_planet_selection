@@ -3,21 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>TI4 Planet Stack Generator</title>
-    <script type="module">import * as ti4 from './__target__/ti4_planet_selection.js'; window.ti4 = ti4;</script>
+    <script type="module">
+        import * as ti4 from './__target__/_ti4_planet_selection.js';
+
+        window.ti4 = ti4;
+    </script>
+    <link rel="stylesheet" href="ti4.css"/>
+
 </head>
 <body>
-<h1>TI4 Planet Stack Generator</h1>
+<h1>Twilight Imperium 4 Tile Allocations</h1>
+<p>This page llocate system tiles with balanced resource and influence for Twilight Imperium 4. Each run generates a new set of
+    decks, randomised within the constraints.</p>
+<p>It will allocate wormholes, anomalies and blank tiles using a simple heuristic to mean that each player has a
+    similar total number of non-planet tiles, and each player has at most one wormhole.</p>
+<p>The available resource and influence is balanced across all players, and a simple recursive backtracking alogrithm
+    used to pick a randomised set of tiles that balances resource and influence between players. Technology, planet
+    traits, and number of planets are not balanced.</p>
+<p>Tile descriptions, and the heuristics to allocate non-planet tiles are factored out to ease upgrades when TI4
+    expansions are released.</p>
+<p><img src="ti4.jpg" with="768" height="256"/></p>
+<h2>Background</h2>
+<p>The base rules of both Twilight Imperium 3 and 4 involve building a deck of tiles to use for the game and then
+    randomly allocating them to players. The group we normally play with found, over time, that this often resulted in
+    very unbalanced games. In Twilight Imperium 3 we found that balancing resources between each deck of tiles was
+    sufficient to balance the game. But with the increased importance of influence in Twilight Imperium 4, we found that
+    balancing both resource and influence helped to create a balanced game.</p>
+<p>There is already an excellent universe builder available online for players who would prefer to skip the universe
+    building stage of the game. Our group enjoys building a universe; hence this script. Running the script provides a
+    list of systems to allocate to each player. What we normally do is build these decks, then randomly allocate each
+    deck out to a player.</p>
+<p>In order to not have too many constraints, we do not balance technology traits, planet traits, or the number of
+    planets. Since these are primarily used to score secret objectives, and TI4 now involves a deck building component
+    to TI4, we are comfortable with that limitation.</p>
+<h2>Source code</h2>
+<p>The source is available at <a href="http://github.com/daveah/ti4_planet_selection">http://github.com/daveah/ti4_planet_selection</a></p>
+<h2>The tool</h2>
+<div id="greet">Select the number of players</div>
+<select id='number_players'>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
 
-    <div id = "greet">Select the number of players</div>
-    <select id = 'number_players'>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
+</select>
+<button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value)">
+    Create the planets
+</button>
 
-    </select>
-    <button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value)">Create the planets</button>
-
-    <div id="output"></div>
+<div id="output"></div>
 </body>
 </html>
 
