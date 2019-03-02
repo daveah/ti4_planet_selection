@@ -57,6 +57,11 @@ tiles = [
 #   }
 #   "specials_fixed" is optional
 allocations = {
+    3: {
+        "num_tiles": 8,
+        "resource_influence_allocations": [(13, 14), (13, 14), (13, 14)],
+        "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1)],
+    },
     4: {
         "num_tiles": 8,
         "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
