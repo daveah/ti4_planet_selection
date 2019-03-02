@@ -281,10 +281,11 @@ class Results:
 
 # Print out planets given a vector of planet indices
 def print_planets(name, planets, formatter):
-    output = "{}{}{}".format(
+    output = "{}{}{}{}".format(
         formatter["Title Pre"],
         name,
-        formatter["Title Post"]
+        formatter["Title Post"],
+        formatter["Table Pre"],
     )
     total_resource = 0
     total_influence = 0
@@ -304,13 +305,20 @@ def print_planets(name, planets, formatter):
         planet_name = formatter["Planet Formatter"].format(
             names[ii])
         output = (output +
-            "{}Name: {}; Resource: {}; Influence: {}; {}{}{}{}".
-            format(formatter["System Pre"], planet_name, resource[ii],
-            influence[ii], worm, anom, blnk, formatter["System Post"]))
+            "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
+            format(
+                formatter["System Pre"],
+                formatter["Col1 Pre"], planet_name,
+                formatter["Col2 Pre"], resource[ii],
+                formatter["Col3 Pre"], influence[ii],
+                formatter["Col4 Pre"], worm,
+                formatter["Col5 Pre"], anom,
+                formatter["Col6 Pre"], blnk,
+                formatter["System Post"]))
     output = (output +
-        ("{}Number of systems {}, total resource: {}, " +
+        ("{}{}Number of systems {}, total resource: {}, " +
         "total influence {}{}").
-        format(formatter["Summary Pre"],
+        format(formatter["Table Post"], formatter["Summary Pre"],
         num_planets, total_resource, total_influence,
         formatter["Summary Post"]))
     return output
@@ -322,8 +330,26 @@ def ti4_planet_selection(num_players, formatter = None):
         formatter = {
             "Title Pre": "<h2>",
             "Title Post": "</h2>",
-            "System Pre": "<p>",
-            "System Post": "</p>",
+            "Table Pre": (
+                "<table><tr>" +
+                "<th>System Name</th>" +
+                "<th>Resources</th>" +
+                "<th>Influence</th>" +
+                "<th>Wormhole</th>" +
+                "<th>Anomaly</th>" +
+                "<th>Blank</th>" +
+                "</tr>"
+            ),
+            "System Pre": "<tr><td>",
+            "Col1 Pre": "",
+            "Col2 Pre": "</td><td>",
+            "Col3 Pre": "</td><td>",
+            "Col4 Pre": "</td><td>",
+            "Col5 Pre": "</td><td>",
+            "Col6 Pre": "</td><td>",
+            "System Sep": "",
+            "System Post": "</td></tr>",
+            "Table Post": "</table>",
             "Summary Pre": "<p><i>",
             "Summary Post": "</i></p>",
             "Planet Formatter": "{}",

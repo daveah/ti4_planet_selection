@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1>Twilight Imperium 4 Tile Allocations</h1>
-<p>This page llocate system tiles with balanced resource and influence for Twilight Imperium 4. Each run generates a new set of
+<p>This page allocates system tiles with balanced resource and influence for Twilight Imperium 4. Each run generates a new set of
     decks, randomised within the constraints.</p>
 <p>It will allocate wormholes, anomalies and blank tiles using a simple heuristic to mean that each player has a
     similar total number of non-planet tiles, and each player has at most one wormhole.</p>
@@ -47,10 +47,9 @@
 
 </select>
 <button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value)">
-    Create the planets
+    Create the balanced decks
 </button>
 
 <div id="output"></div>
 </body>
 </html>
-
