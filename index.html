@@ -17,6 +17,29 @@
 </head>
 <body>
 <h1>Twilight Imperium 4 Systems Dealer</h1>
+<h2>The tool</h2>
+<div id="greet">
+  Select the number of players.
+  Default creates decks balanced in resource, influence, wormholes, blanks and anomalies.  In default style, the number of red and blue backed systems in each deck will not be the same as the original rules.
+  Original creates decks balanced in resource, influence and wormholes, but tries to use the original rules as much as possible for red systems.  This means that a player might have lots of blanks or anomalies, rather than a mix of both.
+</div>
+<select id='number_players'>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+
+</select>
+<select id='style'>
+  <option>default</option>
+  <option>original</option>
+</select>
+<button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value, document.getElementById('style').value)">
+    Create the balanced decks
+</button>
+
+<div id="output"></div>
+<h2>Explanation</h2>
 <p>This page allocates system tiles with balanced resource and influence for Twilight Imperium 4. Each run generates a new set of
     decks, randomised within the constraints.</p>
 <p>It will allocate wormholes, anomalies and blank tiles using a simple heuristic to mean that each player has a
@@ -42,19 +65,5 @@
     to TI4, we are comfortable with that limitation.</p>
 <h2>Source code</h2>
 <p>The source is available at <a href="http://github.com/daveah/ti4_planet_selection">http://github.com/daveah/ti4_planet_selection</a></p>
-<h2>The tool</h2>
-<div id="greet">Select the number of players</div>
-<select id='number_players'>
-    <option>3</option>
-    <option>4</option>
-    <option>5</option>
-    <option>6</option>
-
-</select>
-<button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value)">
-    Create the balanced decks
-</button>
-
-<div id="output"></div>
 </body>
 </html>

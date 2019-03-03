@@ -45,8 +45,9 @@ tiles = [
 ]
 
 # allocations of tiles by number of players
-#   dictionary of player number to a dictionary of allocations
+#   dictionary of config type to a dictionary of allocations
 #   {
+#    "num_players": number of players,
 #    "num_tiles": number_of_tiles_per_player,
 #    "resource_influence_allocations": [(resource_allocation_player_1, influence_allocation_player_1), ...],
 #    # Wormholes will be allocated to first <num_wormholes> players
@@ -57,27 +58,59 @@ tiles = [
 #   }
 #   "specials_fixed" is optional
 allocations = {
-    3: {
+    (3, "default"): {
+        "num_players": 3,
         "num_tiles": 8,
         "resource_influence_allocations": [(13, 14), (13, 14), (13, 14)],
         "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1)],
     },
-    4: {
+    (3, "original"): {
+        "num_players": 3,
+        "num_tiles": 8,
+        "resource_influence_allocations": [(14, 15), (14, 15), (14, 15)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(1, 0, 0), (2, 0, 0), (1, 0, 0)],
+    },
+    (4, "default"): {
+        "num_players": 4,
         "num_tiles": 8,
         "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
         "specials_shuffled": [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
     },
-    5: {
+    (4, "original"): {
+        "num_players": 4,
+        "num_tiles": 8,
+        "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(3, 0, 0), (3, 0, 0), (2, 0, 0), (2, 0, 0)],
+    },
+    (5, "default"): {
+        "num_players": 5,
         "num_tiles": 6,
         "resource_influence_allocations": [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
         "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]
     },
-    6: {
+    (5, "original"): {
+        "num_players": 5,
+        "num_tiles": 6,
+        "resource_influence_allocations": [(10, 10), (9, 10), (9, 10), (9, 10), (9, 9)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0)]
+    },
+    (6, "default"): {
+        "num_players": 6,
         "num_tiles": 5,
         "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
         "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
+    },
+    (6, "original"): {
+        "num_players": 6,
+        "num_tiles": 5,
+        "resource_influence_allocations": [(8, 7), (8, 8), (7, 8), (7, 8), (7, 8), (7, 8)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0), (2, 0, 0)]
     },
  }
 
@@ -97,6 +130,8 @@ blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
 
 # Hold a set of results
 class Results:
+    # Number of players
+    num_players = None
     # Vector of amount of resources for each player
     player_resource = None
     # Vector of amount of inflience for each player
@@ -114,14 +149,15 @@ class Results:
     #   set to zero for unallocated, one for allocated
     used = None
 
-    def __init__(self, num_players):
+    def __init__(self, config):
+        self.num_players = None
         self.player_resource = None
         self.player_influence = None
         self.player_planets = None
         self.shared_planets = []
         self.used = [0 for ii in range(0, len(tiles))]
         self._allocate_planet(0, -1)
-        self._configure(num_players)
+        self._configure(config)
 
     # Allocate a planet to a given player (-1 for shared)
     def _allocate_planet(self, planet_num, player_num):
@@ -143,8 +179,8 @@ class Results:
 
     # Allocate remaining tiles to players
     # Return true on success, false on failure
-    def allocate(self, num_players):
-        for player in range(0, num_players):
+    def allocate(self):
+        for player in range(0, self.num_players):
             if not self._fill_player(player, self._get_unused_vector(),
                                     self.player_resource[player],
                                     self.player_influence[player],
@@ -206,27 +242,28 @@ class Results:
                 return True
 
     # Configure the results and allocate special tiles depending on number of players
-    def _configure(self, num_players):
-        player_allocations = allocations[num_players]
+    def _configure(self, config):
+        # Set the number of players
+        self.num_players = config["num_players"]
         # Set the number of tiles to allocate to each player
-        self.num_tiles = player_allocations["num_tiles"]
+        self.num_tiles = config["num_tiles"]
         # Set resources and influence budget for each player
-        self._configure_rip(list(player_allocations["resource_influence_allocations"]))
+        self._configure_rip(list(config["resource_influence_allocations"]))
         # Allocate wormholes to the players
-        self._configure_w(num_players)
+        self._configure_w()
         # Specials are allocated in two sets, one randomised, and one fixed
         # left over specials are put in shared_planets
-        specials_r = list(player_allocations["specials_shuffled"])
+        specials_r = list(config["specials_shuffled"])
         random.shuffle(specials_r)
         specials = None
-        if "specials_fixed" in player_allocations:
-            specials_f = list(player_allocations["specials_fixed"])
+        if "specials_fixed" in config:
+            specials_f = list(config["specials_fixed"])
             specials = [
                 (
                     specials_r[ii][0] + specials_f[ii][0],
                     specials_r[ii][1] + specials_f[ii][1],
                     specials_r[ii][2] + specials_f[ii][2]
-                ) for ii in range(0, num_players)
+                ) for ii in range(0, self.num_players)
             ]
         else:
             specials = specials_r
@@ -241,12 +278,12 @@ class Results:
         self.player_planets = [[] for res_infl in res_infls]
 
     # Configure wormholes, allocating evenly to players
-    def _configure_w(self, num_players):
+    def _configure_w(self):
         jj = 0
         for ii in range(0, len(wormhole)):
             self._allocate_planet(wormhole[ii], jj)
             jj = jj + 1
-            if jj >= num_players:
+            if jj >= self.num_players:
                 jj = 0
 
     # Given a vector of tuples configure anomalies and blanks
@@ -329,7 +366,8 @@ def print_planets(name, planets, formatter):
     return output
 
 # Select tiles for each player for a given number of players
-def ti4_planet_selection(num_players, formatter = None):
+def ti4_planet_selection(num_players, style, formatter=None):
+    config = (int(num_players), str(style))
     # By default use an html formatter
     if formatter is None:
         formatter = {
@@ -362,15 +400,15 @@ def ti4_planet_selection(num_players, formatter = None):
     results = None
     success = False
     for num_attempts in range(0, num_iterations):
-        results = Results(num_players)
-        if results.allocate(num_players):
+        results = Results(allocations[config])
+        if results.allocate():
             success = True
             break
     if not success:
         raise RuntimeError("Unable to converge in {} iterations")
     results.check_all_used()
     output = print_planets("Shared planets:", results.shared_planets, formatter)
-    for nn in range(0, num_players):
+    for nn in range(0, results.num_players):
         output = (output +
             print_planets("Player {}".
                 format(nn + 1),
@@ -379,6 +417,6 @@ def ti4_planet_selection(num_players, formatter = None):
 
     return output
 
-# Return a list of all possible player numbers
-def player_numbers():
-    return sorted(list(allocations.keys()))
+# Return a list of all possible configs
+def config_options():
+    return list(allocations.keys())
