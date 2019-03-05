@@ -202,8 +202,7 @@ class Results:
             if not self._fill_player(player, self._get_unused_vector(),
                                     self.player_resource[player],
                                     self.player_influence[player],
-                                    self.num_tiles - len(self.player_planets[player]),
-                                    []):
+                                    self.num_tiles - len(self.player_planets[player])):
                 return False
         return True
 
@@ -225,39 +224,54 @@ class Results:
     #   Return True on success, False on failure
     #   State should only be updated on success
     def _fill_player(self, player_num, unused_tiles,
-                    resources_required, influence_required,
-                    num_planets, player_planets):
-        # Terminate on fail in num_planets is below 0
-        if num_planets < 0:
-            return False
-        # Terminate on success if we have successfully allocated everything
-        if (num_planets == 0 and
-                resources_required == 0 and
-                influence_required == 0):
-            for planet in player_planets:
-                self._allocate_planet(planet, player_num)
-            return True
-        # Remove tiles that cannot be allocated
-        new_unused_tiles = [tile
-                            for tile in unused_tiles
-                            if (resources_required >= resource[tile] and
-                                influence_required >= influence[tile])]
-        # Iterate until we have successfully allocated a planet
-        while (True):
-            if len(new_unused_tiles) == 0:
-                return False
-            # Select first tile and allocate
-            candidate_tile = new_unused_tiles[0]
-            new_unused_tiles = new_unused_tiles[1:]
-            # Take a deep copy so the loop throws away failed allocations
-            new_player_planets = list(player_planets)
-            new_player_planets.append(candidate_tile)
-            # Recurse, on false remove first tile
-            if self._fill_player(player_num, new_unused_tiles,
-                                resources_required - resource[candidate_tile],
-                                influence_required - influence[candidate_tile],
-                                num_planets - 1, new_player_planets):
-                return True
+                     resources_required, influence_required,
+                     num_planets):
+        # Set up a results vector consisting of num_planets
+        # lists that will contain tile selected, resources required
+        # and influence required
+        planet_selection = [list([-1, -1, -1]) for ii in range(0, num_planets+1)]
+        planet_selection[0] = [-1, resources_required, influence_required]
+        position = 0
+        num_unused_tiles = len(unused_tiles)
+        # Loop until the last planet selected has taken resource and influence required to 0
+        while (planet_selection[num_planets][1] != 0 and
+               planet_selection[num_planets][2] != 0):
+            # Select a valid planet for position
+            position = position + 1
+            planet_selection[position][0] = planet_selection[position-1][0]
+            # Loop until we've found a valid tile for this position
+            found = False
+            while not found:
+                # If we fully backtrack to the start, we've failed
+                if position == 0:
+                    return False
+                # Try the next planet
+                planet_selection[position][0] = planet_selection[position][0] + 1
+                # If we've run out of tiles then backtrack
+                if planet_selection[position][0] >= num_unused_tiles:
+                    planet_selection[position] = [-1, -1, -1]
+                    position = position - 1
+                    continue
+                # Test this tile
+                tile = unused_tiles[planet_selection[position][0]]
+                planet_selection[position][1] = (
+                    planet_selection[position-1][1] - resource[tile])
+                planet_selection[position][2] = (
+                    planet_selection[position-1][2] - influence[tile])
+                # if we've overshot the budget, continue
+                if (planet_selection[position][1] < 0 or
+                    planet_selection[position][2] < 0):
+                    continue
+                # if we are on the last tile and have not hit the budget, continue
+                if (position == num_planets and (
+                    planet_selection[position][1] != 0 or
+                    planet_selection[position][2] != 0)):
+                    continue
+                found = True
+        # Allocate the selected tile set
+        for planet in planet_selection[1:]:
+            self._allocate_planet(unused_tiles[planet[0]], player_num)
+        return True
 
     # Configure the results and allocate special tiles depending on number of players
     def _configure(self, config):
