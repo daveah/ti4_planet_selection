@@ -1,7 +1,7 @@
 # Twilight Imperium 4 Tile Allocations
 Allocate system tiles with balanced resource and influence for Twilight Imperium 4.  Each run of the script generates a new set of decks, randomised within the constraints.
 
-Use from the command line with a single parameter, to specify the number of players (only 4, 5, 6 are supported).
+Use from the command line with a single parameter, to specify the number of players (3, 4, 5 or 6 are supported).
 
 The script will allocate wormholes, anomalies and blank tiles using a simple heuristic to mean that each player has a similar total number of non-planet tiles, and each player has at most one wormhole.
 
@@ -14,20 +14,33 @@ The base rules of both Twilight Imperium 3 and 4 involve building a deck of tile
 
 There is already an excellent universe builder available online for players who would prefer to skip the universe building stage of the game.  Our group enjoys building a universe; hence this script.  Running the script provides a list of systems to allocate to each player.  What we normally do is build these decks, then randomly allocate each deck out to a player.
 
-In order to not have too many constraints, we do not balance technology traits, planet traits, or the number of planets.  Since these are primarily used to score secret objectives, and TI4 now involves a deck building component to TI4, we are comfortable with that limitation.
+In order to not have too many constraints, we do not balance technology traits, planet traits, or the number of planets.  Since these are primarily used to score secret objectives, and TI4 now involves a deck building component with secret objectives, we are comfortable with that limitation.
 
 ## How does it work?
-Firstly, depending on the number of players, a simple set of rules are used to allocate wormholes, anomalies and blank tiles.  Each player is allocate a resource and influence budget, and the number of tiles required are recorded.
+Firstly, depending on the number of players, a simple set of rules are used to allocate wormholes, anomalies and blank tiles.  Each player is allocated a resource and influence budget, and the number of tiles required are recorded.
 
-Secondly, each player in turn takes a shuffled deck of remaining tiles (all planet tiles) and uses a simple back-tracking recursion to find a set of tiles that exactly matches the resource and influence budget.  It is feasible that selection of planets for an early player creates a situation whether the resource and influence budget can no longer be exactly matched for a later player.  When this occurs the solution is thrown away and recomputed.  The shuffling of the deck allows the system to converge on a feasible solution.  Testing on the base TI4 game tiles has shown that the 4 player version solves 90% of the time and the 5/6 player version 35-40% of the time.  Therefore, we expect rapid generation of a valid solution.
+Secondly, each player in turn takes a shuffled deck of remaining tiles (all planet tiles) and uses a simple back-tracking recursion to find a set of tiles that exactly matches the resource and influence budget.  It is feasible that selection of planets for an early player creates a situation where the resource and influence budget can no longer be exactly matched for a later player.  When this occurs the solution is thrown away and recomputed.  The shuffling of the deck allows the system to converge on a feasible solution.  Testing on the base TI4 game tiles has shown that the 4 player version solves 90% of the time and the 5/6 player version 35-40% of the time.  Therefore, we expect rapid generation of a valid solution.
 
 ## Upgrading for expansions
 Upgrades to new expansions should be possible by reconfiguring the 2 data structures and 2 global variable at the top of the file.  New tiles should be entered into the tiles vector.  When allocating tiles for a given number of players, left over tiles are automatically swept into the shared pile.  The allocations vector should be populated with the number of tiles per player, the allocations of resource and influence per player, and the allocations of special tiles.  Special tiles are allocated in 3 passes.  All wormhole tiles are allocated to the first <num_wormholes> players.  If <num_wormholes> is greater than the number of players this wraps around.  Then a set of special tiles are allocated to random players.  Finally a set of special tiles are allocated to fixed player numbers - this is intended to allow the number of special tiles to be balanced, even though the wormholes are allocated to fixed positions.  An error will be thrown if the resources and influence allocations create something that doesn't converge.  In this case, adjust resource and influence accordingly.
 
-## Compilation
+## Files
 
-You can compile the python code by running
+- compile_to_js.py
+-- Used to compile _ti4_planet_selection.py to Javascript, and then upload the resulting code, along with the main website to the web server.  Command line arguments explained through --help.
+- ti4_planet_selection.py
+-- Command line entry point into the tool.  Arguments described through --help.  Uses _ti4_planet_selection.py for all computation.
+- _ti4_planet_selection.py
+-- Main code base, used both by command line and web version (via Javascript compiler).
+- index.html, ti4.css, ti4.jpg
+-- Webpage source.
+- LICENSE
+-- The project is licensed under the MIT license.
+- README.md
+-- The readme for the project.
 
-```bash
-python -m transcrypt -b -m -n _ti4_planet_selection.py 
-```
+## Requirements
+
+- transcrypt
+-- Version >= 3.7
+-- python -m pip install transcrypt
