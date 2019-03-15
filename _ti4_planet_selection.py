@@ -112,6 +112,14 @@ allocations = {
         "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
         "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0)]
     },
+    # 5 player game configured for use with a warp zone.
+    (5, "warp"): {
+        "num_players": 5,
+        "num_tiles": 5,
+        "resource_influence_allocations": [(8, 9), (8, 9), (8, 9), (8, 9), (8, 9)],
+        "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1)],
+        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0)]
+    },
     # 6 player game with two blank systems removed.
     (6, "default"): {
         "num_players": 6,
@@ -420,16 +428,22 @@ def ti4_planet_selection(num_players, style, formatter=None):
             "Summary Pre": "<p><i>",
             "Summary Post": "</i></p>",
             "Planet Formatter": "{}",
+            "Error Pre": "<h2>Error</h2><p>",
+            "Error Post": "</p>",
         }
     results = None
     success = False
+    if config not in allocations:
+        return "{}Invalid configuration {}, try another configuration{}".format(
+            formatter["Error Pre"], config, formatter["Error Post"])
     for _ in range(0, num_iterations):
         results = Results(allocations[config])
         if results.allocate():
             success = True
             break
     if not success:
-        raise RuntimeError("Unable to converge in {} iterations")
+        return "{}Unable to converge in {} iterations{}".format(
+            formatter["Error Pre"], num_iterations, formatter["Error Post"])
     results.check_all_used()
     output = print_planets(
         "Shared planets:", results.shared_planets, formatter)
@@ -439,7 +453,6 @@ def ti4_planet_selection(num_players, style, formatter=None):
                                 format(nn + 1),
                                 results.player_planets[nn],
                                 formatter))
-
     return output
 
 

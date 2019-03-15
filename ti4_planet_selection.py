@@ -29,6 +29,8 @@ def main():
         "Summary Pre": "  ",
         "Summary Post": "\n",
         "Planet Formatter": "{:22}",
+        "Error Pre": "",
+        "Error Post": "\n",
     }
     option = (args.num_players, args.style)
     if option in options:
