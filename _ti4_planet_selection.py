@@ -130,7 +130,7 @@ allocations = {
         "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
         "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0), (2, 0, 0)]
     },
- }
+}
 
 # Extract reference data into working vectors
 # All tile names
@@ -145,6 +145,7 @@ wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][3]]
 anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
 # Indices of blank systems
 blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
+
 
 # Hold a set of results
 class Results:
@@ -189,9 +190,9 @@ class Results:
                                    format(player_num))
             self.player_planets[player_num].append(planet_num)
             self.player_resource[player_num] = (
-                    self.player_resource[player_num] - resource[planet_num])
+                self.player_resource[player_num] - resource[planet_num])
             self.player_influence[player_num] = (
-                    self.player_influence[player_num] - influence[planet_num])
+                self.player_influence[player_num] - influence[planet_num])
         else:
             self.shared_planets.append(planet_num)
 
@@ -200,10 +201,11 @@ class Results:
     def allocate(self):
         for player in range(0, self.num_players):
             if not self._fill_player(player, self._get_unused_vector(),
-                                    self.player_resource[player],
-                                    self.player_influence[player],
-                                    self.num_tiles - len(self.player_planets[player]),
-                                    []):
+                                     self.player_resource[player],
+                                     self.player_influence[player],
+                                     self.num_tiles -
+                                     len(self.player_planets[player]),
+                                     []):
                 return False
         return True
 
@@ -216,7 +218,8 @@ class Results:
     # Return a shuffled vector of unused tile indices
     def _get_unused_vector(self):
         unused_tiles = []
-        unused_tiles = [ii for ii in range(0, len(self.used)) if self.used[ii] == 0]
+        unused_tiles = [ii for ii in range(
+            0, len(self.used)) if self.used[ii] == 0]
         random.shuffle(unused_tiles)
         return unused_tiles
 
@@ -225,8 +228,8 @@ class Results:
     #   Return True on success, False on failure
     #   State should only be updated on success
     def _fill_player(self, player_num, unused_tiles,
-                    resources_required, influence_required,
-                    num_planets, player_planets):
+                     resources_required, influence_required,
+                     num_planets, player_planets):
         # Terminate on fail in num_planets is below 0
         if num_planets < 0:
             return False
@@ -254,9 +257,10 @@ class Results:
             new_player_planets.append(candidate_tile)
             # Recurse, on false remove first tile
             if self._fill_player(player_num, new_unused_tiles,
-                                resources_required - resource[candidate_tile],
-                                influence_required - influence[candidate_tile],
-                                num_planets - 1, new_player_planets):
+                                 resources_required - resource[candidate_tile],
+                                 influence_required -
+                                 influence[candidate_tile],
+                                 num_planets - 1, new_player_planets):
                 return True
 
     # Configure the results and allocate special tiles depending on number of players
@@ -317,14 +321,14 @@ class Results:
         reds = list(anomaly)
         random.shuffle(reds)
         for ii in range(0, len(num_anoms)):
-            for jj in range(0, num_anoms[ii]):
+            for _ in range(0, num_anoms[ii]):
                 self._allocate_planet(reds[0], ii)
                 reds = reds[1:]
                 num_total[ii] = num_total[ii] - 1
         # Allocate blanks to fixed players
         blanks = list(blank)
         for ii in range(0, len(abs)):
-            for jj in range(0, num_blank[ii]):
+            for _ in range(0, num_blank[ii]):
                 self._allocate_planet(blanks[0], ii)
                 blanks = blanks[1:]
                 num_total[ii] = num_total[ii] - 1
@@ -333,11 +337,12 @@ class Results:
         remain.extend(blanks)
         random.shuffle(remain)
         for ii in range(0, len(num_total)):
-            for jj in range(0, num_total[ii]):
+            for _ in range(0, num_total[ii]):
                 self._allocate_planet(remain[0], ii)
                 remain = remain[1:]
         for rem in remain:
             self._allocate_planet(rem, -1)
+
 
 # Print out planets given a vector of planet indices
 def print_planets(name, planets, formatter):
@@ -365,23 +370,24 @@ def print_planets(name, planets, formatter):
         planet_name = formatter["Planet Formatter"].format(
             names[ii])
         output = (output +
-            "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
-            format(
-                formatter["System Pre"],
-                formatter["Col1 Pre"], planet_name,
-                formatter["Col2 Pre"], resource[ii],
-                formatter["Col3 Pre"], influence[ii],
-                formatter["Col4 Pre"], worm,
-                formatter["Col5 Pre"], anom,
-                formatter["Col6 Pre"], blnk,
-                formatter["System Post"]))
+                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
+                  format(
+                      formatter["System Pre"],
+                      formatter["Col1 Pre"], planet_name,
+                      formatter["Col2 Pre"], resource[ii],
+                      formatter["Col3 Pre"], influence[ii],
+                      formatter["Col4 Pre"], worm,
+                      formatter["Col5 Pre"], anom,
+                      formatter["Col6 Pre"], blnk,
+                      formatter["System Post"]))
     output = (output +
-        ("{}{}Number of systems {}, total resource: {}, " +
-        "total influence {}{}").
-        format(formatter["Table Post"], formatter["Summary Pre"],
-        num_planets, total_resource, total_influence,
-        formatter["Summary Post"]))
+              ("{}{}Number of systems {}, total resource: {}, " +
+               "total influence {}{}").
+              format(formatter["Table Post"], formatter["Summary Pre"],
+                     num_planets, total_resource, total_influence,
+                     formatter["Summary Post"]))
     return output
+
 
 # Select tiles for each player for a given number of players
 def ti4_planet_selection(num_players, style, formatter=None):
@@ -417,7 +423,7 @@ def ti4_planet_selection(num_players, style, formatter=None):
         }
     results = None
     success = False
-    for num_attempts in range(0, num_iterations):
+    for _ in range(0, num_iterations):
         results = Results(allocations[config])
         if results.allocate():
             success = True
@@ -425,15 +431,17 @@ def ti4_planet_selection(num_players, style, formatter=None):
     if not success:
         raise RuntimeError("Unable to converge in {} iterations")
     results.check_all_used()
-    output = print_planets("Shared planets:", results.shared_planets, formatter)
+    output = print_planets(
+        "Shared planets:", results.shared_planets, formatter)
     for nn in range(0, results.num_players):
         output = (output +
-            print_planets("Player {}".
-                format(nn + 1),
-                results.player_planets[nn],
-                formatter))
+                  print_planets("Player {}".
+                                format(nn + 1),
+                                results.player_planets[nn],
+                                formatter))
 
     return output
+
 
 # Return a list of all possible configs
 def config_options():
