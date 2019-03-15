@@ -27,20 +27,27 @@ Upgrades to new expansions should be possible by reconfiguring the 2 data struct
 ## Files
 
 - compile_to_js.py
--- Used to compile _ti4_planet_selection.py to Javascript, and then upload the resulting code, along with the main website to the web server.  Command line arguments explained through --help.
+  - Used to compile and/or upload website.
+    - build - compile _ti4_planet_selection.py to Javascript.
+    - upload- upload the compiled Javascript code, along with the main website to the web server.
+    - all - build and upload the code.
+  - Command line arguments explained through --help.
 - ti4_planet_selection.py
--- Command line entry point into the tool.  Arguments described through --help.  Uses _ti4_planet_selection.py for all computation.
+  - Command line entry point into the tool.
+  - Arguments described through --help.
+  - Uses _ti4_planet_selection.py for all computation.
 - _ti4_planet_selection.py
--- Main code base, used both by command line and web version (via Javascript compiler).
+  - Main code base.
+  - Used both by command line and web version (via Javascript compiler).
 - index.html, ti4.css, ti4.jpg
--- Webpage source.
+  - Webpage source.
 - LICENSE
--- The project is licensed under the MIT license.
+  - The project is licensed under the MIT license.
 - README.md
--- The readme for the project.
+  - The readme for the project.
 
 ## Requirements
 
 - transcrypt
--- Version >= 3.7
--- python -m pip install transcrypt
+  - Version >= 3.7
+  - python -m pip install transcrypt
