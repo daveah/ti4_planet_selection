@@ -1,4 +1,16 @@
 <!DOCTYPE html>
+<script>
+    function SelectChanged() {
+        if (document.getElementById('number_players').value == "5") {
+            document.getElementById('warp').disabled = false;
+        } else {
+            document.getElementById('warp').disabled = true;
+            if (document.getElementById('style').value == "warp") {
+                document.getElementById('style').value = "default";
+            }
+        }
+    }
+</script>
 <html lang="en">
 
 <head>
@@ -30,7 +42,7 @@
         <p>Warp is only valid for 5 player games, it creates a set of tiles suitable for use in a warp zone 5 player
             game.</p>
     </div>
-    <select id='number_players'>
+    <select id='number_players' onchange="SelectChanged();">
         <option>3</option>
         <option>4</option>
         <option>5</option>
@@ -39,7 +51,7 @@
     <select id='style'>
         <option>default</option>
         <option>original</option>
-        <option>warp</option>
+        <option id='warp' disabled>warp</option>
     </select>
     <button
         onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value, document.getElementById('style').value)">
