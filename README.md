@@ -29,7 +29,6 @@ Upgrades to new expansions should be possible by reconfiguring the 2 data struct
 - compile_to_js.py
   - Used to compile and/or upload website.
     - build - compile _ti4_planet_selection.py to Javascript.
-    - upload- upload the compiled Javascript code, along with the main website to the web server.
     - all - build and upload the code.
   - Command line arguments explained through --help.
 - ti4_planet_selection.py
