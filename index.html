@@ -1,16 +1,4 @@
 <!DOCTYPE html>
-<script>
-    function SelectChanged() {
-        if (document.getElementById('number_players').value == "5") {
-            document.getElementById('warp').disabled = false;
-        } else {
-            document.getElementById('warp').disabled = true;
-            if (document.getElementById('style').value == "warp") {
-                document.getElementById('style').value = "default";
-            }
-        }
-    }
-</script>
 <html lang="en">
 
 <head>
@@ -34,15 +22,17 @@
     <h2>The tool</h2>
     <div id="greet">
         Select the number of players.
-        <p>Default creates decks balanced in resource, influence, wormholes, blanks and anomalies. In default style, the
-            number of red and blue backed systems in each deck will not be the same as the original rules.</p>
-        <p>Original creates decks balanced in resource, influence and wormholes, but tries to use the original rules as
-            much as possible for red systems. This means that a player might have lots of blanks or anomalies, rather
-            than a mix of both.</p>
+        <p>Default creates decks balanced in resource, influence, wormholes, blanks and anomalies. In default style,
+            the number of red and blue backed systems in each deck will not be the same as the original rules.</p>
+        <p>Original creates decks balanced in resource, influence and wormholes, but tries to use the original rules
+            as much as possible for red systems. This means that a player might have lots of blanks or anomalies,
+            rather than a mix of both.</p>
         <p>Warp is only valid for 5 player games, it creates a set of tiles suitable for use in a warp zone 5 player
             game.</p>
     </div>
-    <select id='number_players' onchange="SelectChanged();">
+    <select id='number_players' onchange="if (document.getElementById('number_players').value == '5') {
+        document.getElementById('warp').disabled=false; } else { document.getElementById('warp').disabled=true; if
+        (document.getElementById('style').value=='warp' ) { document.getElementById('style').value='default'; } }">
         <option>3</option>
         <option>4</option>
         <option>5</option>
@@ -53,14 +43,16 @@
         <option>original</option>
         <option id='warp' disabled>warp</option>
     </select>
-    <button
-        onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection (document.getElementById('number_players').value, document.getElementById('style').value)">
+    <button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection(
+        document.getElementById('number_players').value,
+        document.getElementById('style').value);">
         Create the balanced decks
     </button>
 
     <div id="output"></div>
     <h2>Explanation</h2>
-    <p>This page allocates system tiles with balanced resource and influence for Twilight Imperium 4. Each run generates
+    <p>This page allocates system tiles with balanced resource and influence for Twilight Imperium 4. Each run
+        generates
         a new set of decks, randomised within the constraints.</p>
     <p>It will allocate wormholes, anomalies and blank tiles using a simple heuristic to mean that each player has a
         similar total number of non-planet tiles, and each player has at most one wormhole.</p>
@@ -71,21 +63,22 @@
         expansions are released.</p>
     <p><img src="ti4.jpg" width="768" height="256" alt="TI4 board image from wikipedia" /></p>
     <h2>Background</h2>
-    <p>The base rules of both Twilight Imperium 3 and 4 involve building a deck of tiles to use for the game and then
-        randomly allocating them to players. The group we normally play with found, over time, that this often resulted
-        in very unbalanced games. In Twilight Imperium 3 we found that balancing resources between each deck of tiles
-        was sufficient to balance the game. But with the increased importance of influence in Twilight Imperium 4, we
-        found that balancing both resource and influence helped to create a balanced game.</p>
-    <p>There is already an excellent universe builder available online for players who would prefer to skip the universe
-        building stage of the game. Our group enjoys building a universe; hence this script. Running the script provides
-        a list of systems to allocate to each player. What we normally do is build these decks, then randomly allocate
-        each deck out to a player.</p>
-    <p>In order to not have too many constraints, we do not balance technology traits, planet traits, or the number of
-        planets. Since these are primarily used to score secret objectives, and TI4 now involves a deck building
+    <p>The base rules of both Twilight Imperium 3 and 4 involve building a deck of tiles to use for the game and
+        then randomly allocating them to players. The group we normally play with found, over time, that this often
+        resulted in very unbalanced games. In Twilight Imperium 3 we found that balancing resources between each deck of
+        tiles was sufficient to balance the game. But with the increased importance of influence in Twilight Imperium 4,
+        we found that balancing both resource and influence helped to create a balanced game.</p>
+    <p>There is already an excellent universe builder available online for players who would prefer to skip the
+        universe building stage of the game. Our group enjoys building a universe; hence this script. Running the script
+        provides a list of systems to allocate to each player. What we normally do is build these decks, then randomly
+        allocate each deck out to a player.</p>
+    <p>In order to not have too many constraints, we do not balance technology traits, planet traits, or the number
+        of planets. Since these are primarily used to score secret objectives, and TI4 now involves a deck building
         component to secret objectives, we are comfortable with that limitation.</p>
     <h2>Source code</h2>
     <p>The source is available at <a
-            href="http://github.com/daveah/ti4_planet_selection">http://github.com/daveah/ti4_planet_selection</a></p>
+            href="http://github.com/daveah/ti4_planet_selection">http://github.com/daveah/ti4_planet_selection</a>
+    </p>
 </body>
 
 </html>
