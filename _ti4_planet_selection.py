@@ -450,13 +450,14 @@ def print_planets(name, planets, formatter):
 
 
 # Select tiles for each player for a given number of players
-def ti4_planet_selection(num_players, style, formatter=None):
+def ti4_planet_selection(num_players, style, formatter_name=None):
     config = (int(num_players), str(style))
     # By default use an html formatter
-    if formatter is None:
+    formatter = None
+    if formatter_name is None:
         formatter = formatters["HTML"]
     else:
-        formatter = formatters[formatter]
+        formatter = formatters[formatter_name]
     results = None
     success = False
     if config not in allocations:
