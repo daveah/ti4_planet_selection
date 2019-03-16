@@ -33,11 +33,11 @@ if __name__ == '__main__':
             "ascii\n")
         for file in file_list:
             ftp_cmd_line = (ftp_cmd_line +
-                "put {}\n".format(file))
+                            "put {}\n".format(file))
         ftp_cmd_line = ftp_cmd_line + "bin\n"
         for file in file_list_bin:
             ftp_cmd_line = (ftp_cmd_line +
-                "put {}\n".format(file))
+                            "put {}\n".format(file))
         ftp_cmd_line = ftp_cmd_line + "bye\n"
         print(ftp_cmd_line)
         system("echo \"{}\" | ftp -n".format(ftp_cmd_line))

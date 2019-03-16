@@ -45,8 +45,9 @@ tiles = [
 ]
 
 # allocations of tiles by number of players
-#   dictionary of player number to a dictionary of allocations
+#   dictionary of config type to a dictionary of allocations
 #   {
+#    "num_players": number of players,
 #    "num_tiles": number_of_tiles_per_player,
 #    "resource_influence_allocations": [(resource_allocation_player_1, influence_allocation_player_1), ...],
 #    # Wormholes will be allocated to first <num_wormholes> players
@@ -57,29 +58,139 @@ tiles = [
 #   }
 #   "specials_fixed" is optional
 allocations = {
-    3: {
+    # 3 player game with all wormholes and 6 blanks/anomolies in play.
+    # Moderate resources.
+    (3, "default"): {
+        "num_players": 3,
         "num_tiles": 8,
         "resource_influence_allocations": [(13, 14), (13, 14), (13, 14)],
         "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1)],
     },
-    4: {
+    # 3 player game with all wormholes and 4 other red tiles in play.
+    # High resources.
+    # Uses base rules for red system allocation.
+    # No balancing of blanks and anomalies.
+    (3, "original"): {
+        "num_players": 3,
+        "num_tiles": 8,
+        "resource_influence_allocations": [(14, 15), (14, 15), (14, 15)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(1, 0, 0), (2, 0, 0), (1, 0, 0)],
+    },
+    # 4 player game with all tiles in play.
+    (4, "default"): {
+        "num_players": 4,
         "num_tiles": 8,
         "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
         "specials_shuffled": [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
     },
-    5: {
+    # 4 player game with all tiles in play.
+    # Uses base rules for red system allocation.
+    # No balancing of blanks and anomalies.
+    (4, "original"): {
+        "num_players": 4,
+        "num_tiles": 8,
+        "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(3, 0, 0), (3, 0, 0), (2, 0, 0), (2, 0, 0)],
+    },
+    # 5 player game with one blank and one 1/1 system removed.
+    (5, "default"): {
+        "num_players": 5,
         "num_tiles": 6,
         "resource_influence_allocations": [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
         "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]
     },
-    6: {
+    # 5 player game with two 1/1 systems removed.
+    # Uses base rules for red system allocation.
+    # No balancing of blanks and anomalies
+    (5, "original"): {
+        "num_players": 5,
+        "num_tiles": 6,
+        "resource_influence_allocations": [(10, 10), (9, 10), (9, 10), (9, 10), (9, 9)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0)]
+    },
+    # 5 player game configured for use with a warp zone.
+    (5, "warp"): {
+        "num_players": 5,
+        "num_tiles": 5,
+        "resource_influence_allocations": [(8, 9), (8, 9), (8, 9), (8, 9), (8, 9)],
+        "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1)],
+        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0)]
+    },
+    # 6 player game with two blank systems removed.
+    (6, "default"): {
+        "num_players": 6,
         "num_tiles": 5,
         "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
         "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
         "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
     },
- }
+    # 6 player game with two 1/1 systems removed.
+    # Uses base rules for red system allocation.
+    # No balancing of blanks and anomalies.
+    (6, "original"): {
+        "num_players": 6,
+        "num_tiles": 5,
+        "resource_influence_allocations": [(8, 7), (8, 8), (7, 8), (7, 8), (7, 8), (7, 8)],
+        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
+        "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0), (2, 0, 0)]
+    },
+}
+
+# Configurations of various formatters
+formatters = {
+    "Text": {
+        "Title Pre": "",
+        "Title Post": "\n",
+        "Table Pre": "",
+        "System Pre": "  ",
+        "Col1 Pre": "Name: ",
+        "Col2 Pre": "; Resource: ",
+        "Col3 Pre": "; Influence: ",
+        "Col4 Pre": "; ",
+        "Col5 Pre": "",
+        "Col6 Pre": "",
+        "System Post": "\n",
+        "Table Post": "",
+        "Summary Pre": "  ",
+        "Summary Post": "\n",
+        "Planet Formatter": "{:22}",
+        "Error Pre": "",
+        "Error Post": "\n",
+    },
+    "HTML": {
+        "Title Pre": "<h2>",
+        "Title Post": "</h2>",
+        "Table Pre": (
+            "<table><tr>" +
+            "<th>System Name</th>" +
+            "<th>Resources</th>" +
+            "<th>Influence</th>" +
+            "<th>Wormhole</th>" +
+            "<th>Anomaly</th>" +
+            "<th>Blank</th>" +
+            "</tr>"
+        ),
+        "System Pre": "<tr><td>",
+        "Col1 Pre": "",
+        "Col2 Pre": "</td><td>",
+        "Col3 Pre": "</td><td>",
+        "Col4 Pre": "</td><td>",
+        "Col5 Pre": "</td><td>",
+        "Col6 Pre": "</td><td>",
+        "System Sep": "",
+        "System Post": "</td></tr>",
+        "Table Post": "</table>",
+        "Summary Pre": "<p><i>",
+        "Summary Post": "</i></p>",
+        "Planet Formatter": "{}",
+        "Error Pre": "<h2>Error</h2><p>",
+        "Error Post": "</p>",
+    },
+}
 
 # Extract reference data into working vectors
 # All tile names
@@ -95,8 +206,11 @@ anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
 # Indices of blank systems
 blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
 
+
 # Hold a set of results
 class Results:
+    # Number of players
+    num_players = None
     # Vector of amount of resources for each player
     player_resource = None
     # Vector of amount of inflience for each player
@@ -114,14 +228,15 @@ class Results:
     #   set to zero for unallocated, one for allocated
     used = None
 
-    def __init__(self, num_players):
+    def __init__(self, config):
+        self.num_players = None
         self.player_resource = None
         self.player_influence = None
         self.player_planets = None
         self.shared_planets = []
         self.used = [0 for ii in range(0, len(tiles))]
         self._allocate_planet(0, -1)
-        self._configure(num_players)
+        self._configure(config)
 
     # Allocate a planet to a given player (-1 for shared)
     def _allocate_planet(self, planet_num, player_num):
@@ -135,21 +250,22 @@ class Results:
                                    format(player_num))
             self.player_planets[player_num].append(planet_num)
             self.player_resource[player_num] = (
-                    self.player_resource[player_num] - resource[planet_num])
+                self.player_resource[player_num] - resource[planet_num])
             self.player_influence[player_num] = (
-                    self.player_influence[player_num] - influence[planet_num])
+                self.player_influence[player_num] - influence[planet_num])
         else:
             self.shared_planets.append(planet_num)
 
     # Allocate remaining tiles to players
     # Return true on success, false on failure
-    def allocate(self, num_players):
-        for player in range(0, num_players):
+    def allocate(self):
+        for player in range(0, self.num_players):
             if not self._fill_player(player, self._get_unused_vector(),
-                                    self.player_resource[player],
-                                    self.player_influence[player],
-                                    self.num_tiles - len(self.player_planets[player]),
-                                    []):
+                                     self.player_resource[player],
+                                     self.player_influence[player],
+                                     self.num_tiles -
+                                     len(self.player_planets[player]),
+                                     []):
                 return False
         return True
 
@@ -162,7 +278,8 @@ class Results:
     # Return a shuffled vector of unused tile indices
     def _get_unused_vector(self):
         unused_tiles = []
-        unused_tiles = [ii for ii in range(0, len(self.used)) if self.used[ii] == 0]
+        unused_tiles = [ii for ii in range(
+            0, len(self.used)) if self.used[ii] == 0]
         random.shuffle(unused_tiles)
         return unused_tiles
 
@@ -171,8 +288,8 @@ class Results:
     #   Return True on success, False on failure
     #   State should only be updated on success
     def _fill_player(self, player_num, unused_tiles,
-                    resources_required, influence_required,
-                    num_planets, player_planets):
+                     resources_required, influence_required,
+                     num_planets, player_planets):
         # Terminate on fail in num_planets is below 0
         if num_planets < 0:
             return False
@@ -200,33 +317,35 @@ class Results:
             new_player_planets.append(candidate_tile)
             # Recurse, on false remove first tile
             if self._fill_player(player_num, new_unused_tiles,
-                                resources_required - resource[candidate_tile],
-                                influence_required - influence[candidate_tile],
-                                num_planets - 1, new_player_planets):
+                                 resources_required - resource[candidate_tile],
+                                 influence_required -
+                                 influence[candidate_tile],
+                                 num_planets - 1, new_player_planets):
                 return True
 
     # Configure the results and allocate special tiles depending on number of players
-    def _configure(self, num_players):
-        player_allocations = allocations[num_players]
+    def _configure(self, config):
+        # Set the number of players
+        self.num_players = config["num_players"]
         # Set the number of tiles to allocate to each player
-        self.num_tiles = player_allocations["num_tiles"]
+        self.num_tiles = config["num_tiles"]
         # Set resources and influence budget for each player
-        self._configure_rip(list(player_allocations["resource_influence_allocations"]))
+        self._configure_rip(list(config["resource_influence_allocations"]))
         # Allocate wormholes to the players
-        self._configure_w(num_players)
+        self._configure_w()
         # Specials are allocated in two sets, one randomised, and one fixed
         # left over specials are put in shared_planets
-        specials_r = list(player_allocations["specials_shuffled"])
+        specials_r = list(config["specials_shuffled"])
         random.shuffle(specials_r)
         specials = None
-        if "specials_fixed" in player_allocations:
-            specials_f = list(player_allocations["specials_fixed"])
+        if "specials_fixed" in config:
+            specials_f = list(config["specials_fixed"])
             specials = [
                 (
                     specials_r[ii][0] + specials_f[ii][0],
                     specials_r[ii][1] + specials_f[ii][1],
                     specials_r[ii][2] + specials_f[ii][2]
-                ) for ii in range(0, num_players)
+                ) for ii in range(0, self.num_players)
             ]
         else:
             specials = specials_r
@@ -241,12 +360,12 @@ class Results:
         self.player_planets = [[] for res_infl in res_infls]
 
     # Configure wormholes, allocating evenly to players
-    def _configure_w(self, num_players):
+    def _configure_w(self):
         jj = 0
         for ii in range(0, len(wormhole)):
             self._allocate_planet(wormhole[ii], jj)
             jj = jj + 1
-            if jj >= num_players:
+            if jj >= self.num_players:
                 jj = 0
 
     # Given a vector of tuples configure anomalies and blanks
@@ -262,14 +381,14 @@ class Results:
         reds = list(anomaly)
         random.shuffle(reds)
         for ii in range(0, len(num_anoms)):
-            for jj in range(0, num_anoms[ii]):
+            for _ in range(0, num_anoms[ii]):
                 self._allocate_planet(reds[0], ii)
                 reds = reds[1:]
                 num_total[ii] = num_total[ii] - 1
         # Allocate blanks to fixed players
         blanks = list(blank)
         for ii in range(0, len(abs)):
-            for jj in range(0, num_blank[ii]):
+            for _ in range(0, num_blank[ii]):
                 self._allocate_planet(blanks[0], ii)
                 blanks = blanks[1:]
                 num_total[ii] = num_total[ii] - 1
@@ -278,11 +397,12 @@ class Results:
         remain.extend(blanks)
         random.shuffle(remain)
         for ii in range(0, len(num_total)):
-            for jj in range(0, num_total[ii]):
+            for _ in range(0, num_total[ii]):
                 self._allocate_planet(remain[0], ii)
                 remain = remain[1:]
         for rem in remain:
             self._allocate_planet(rem, -1)
+
 
 # Print out planets given a vector of planet indices
 def print_planets(name, planets, formatter):
@@ -310,75 +430,59 @@ def print_planets(name, planets, formatter):
         planet_name = formatter["Planet Formatter"].format(
             names[ii])
         output = (output +
-            "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
-            format(
-                formatter["System Pre"],
-                formatter["Col1 Pre"], planet_name,
-                formatter["Col2 Pre"], resource[ii],
-                formatter["Col3 Pre"], influence[ii],
-                formatter["Col4 Pre"], worm,
-                formatter["Col5 Pre"], anom,
-                formatter["Col6 Pre"], blnk,
-                formatter["System Post"]))
+                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
+                  format(
+                      formatter["System Pre"],
+                      formatter["Col1 Pre"], planet_name,
+                      formatter["Col2 Pre"], resource[ii],
+                      formatter["Col3 Pre"], influence[ii],
+                      formatter["Col4 Pre"], worm,
+                      formatter["Col5 Pre"], anom,
+                      formatter["Col6 Pre"], blnk,
+                      formatter["System Post"]))
     output = (output +
-        ("{}{}Number of systems {}, total resource: {}, " +
-        "total influence {}{}").
-        format(formatter["Table Post"], formatter["Summary Pre"],
-        num_planets, total_resource, total_influence,
-        formatter["Summary Post"]))
+              ("{}{}Number of systems {}, total resource: {}, " +
+               "total influence {}{}").
+              format(formatter["Table Post"], formatter["Summary Pre"],
+                     num_planets, total_resource, total_influence,
+                     formatter["Summary Post"]))
     return output
 
+
 # Select tiles for each player for a given number of players
-def ti4_planet_selection(num_players, formatter = None):
+def ti4_planet_selection(num_players, style, formatter_name=None):
+    config = (int(num_players), str(style))
     # By default use an html formatter
-    if formatter is None:
-        formatter = {
-            "Title Pre": "<h2>",
-            "Title Post": "</h2>",
-            "Table Pre": (
-                "<table><tr>" +
-                "<th>System Name</th>" +
-                "<th>Resources</th>" +
-                "<th>Influence</th>" +
-                "<th>Wormhole</th>" +
-                "<th>Anomaly</th>" +
-                "<th>Blank</th>" +
-                "</tr>"
-            ),
-            "System Pre": "<tr><td>",
-            "Col1 Pre": "",
-            "Col2 Pre": "</td><td>",
-            "Col3 Pre": "</td><td>",
-            "Col4 Pre": "</td><td>",
-            "Col5 Pre": "</td><td>",
-            "Col6 Pre": "</td><td>",
-            "System Sep": "",
-            "System Post": "</td></tr>",
-            "Table Post": "</table>",
-            "Summary Pre": "<p><i>",
-            "Summary Post": "</i></p>",
-            "Planet Formatter": "{}",
-        }
+    formatter = None
+    if formatter_name is None:
+        formatter = formatters["HTML"]
+    else:
+        formatter = formatters[formatter_name]
     results = None
     success = False
-    for num_attempts in range(0, num_iterations):
-        results = Results(num_players)
-        if results.allocate(num_players):
+    if config not in allocations:
+        return "{}Invalid configuration {}, try another configuration{}".format(
+            formatter["Error Pre"], config, formatter["Error Post"])
+    for _ in range(0, num_iterations):
+        results = Results(allocations[config])
+        if results.allocate():
             success = True
             break
     if not success:
-        raise RuntimeError("Unable to converge in {} iterations")
+        return "{}Unable to converge in {} iterations{}".format(
+            formatter["Error Pre"], num_iterations, formatter["Error Post"])
     results.check_all_used()
-    output = print_planets("Shared planets:", results.shared_planets, formatter)
-    for nn in range(0, num_players):
+    output = print_planets(
+        "Shared planets:", results.shared_planets, formatter)
+    for nn in range(0, results.num_players):
         output = (output +
-            print_planets("Player {}".
-                format(nn + 1),
-                results.player_planets[nn],
-                formatter))
-
+                  print_planets("Player {}".
+                                format(nn + 1),
+                                results.player_planets[nn],
+                                formatter))
     return output
 
-# Return a list of all possible player numbers
-def player_numbers():
-    return sorted(list(allocations.keys()))
+
+# Return a list of all possible configs
+def config_options():
+    return list(allocations.keys())
