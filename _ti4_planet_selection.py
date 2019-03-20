@@ -108,7 +108,7 @@ allocations = {
     (5, "original"): {
         "num_players": 5,
         "num_tiles": 6,
-        "resource_influence_allocations": [(10, 10), (9, 10), (9, 10), (9, 10), (9, 9)],
+        "resource_influence_allocations": [(10, 9), (9, 10), (9, 10), (9, 10), (9, 10)],
         "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
         "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0)]
     },
