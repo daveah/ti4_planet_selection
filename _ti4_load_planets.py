@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+
+
+# Return tile information
+def _ti4_load_planets():
+    # tiles is a vector of tuples
+    #   each tuple consists of name, number of resource, number of influence,
+    #   bool for whether tile is a wormhole,
+    #   bool for whether tile is an anomaly,
+    #   bool for whether tile is a blank,
+    return [
+        ("Mecatol Rex", 1, 6, False, False, False),
+        ("Bereg, Lirta IV", 5, 4, False, False, False),
+        ("Abyz, Fria", 5, 0, False, False, False),
+        ("New Albion, Starpoint", 4, 2, False, False, False),
+        ("Arnor, Lor", 3, 3, False, False, False),
+        ("Mellon, Zohbat", 3, 3, False, False, False),
+        ("Corneeq, Resculon", 3, 2, False, False, False),
+        ("Lodor", 3, 1, True, False, False),
+        ("Lazar, Sakulag", 3, 1, False, False, False),
+        ("Centauri, Gral", 2, 4, False, False, False),
+        ("Tequ'ran, Torkan", 2, 3, False, False, False),
+        ("Vefut II", 2, 2, False, False, False),
+        ("Saudor", 2, 2, False, False, False),
+        ("Quann", 2, 1, True, False, False),
+        ("Arinam, Meer", 1, 6, False, False, False),
+        ("Qucen'n, Rarron", 1, 5, False, False, False),
+        ("Mehar Xull", 1, 3, False, False, False),
+        ("Dal Bootha, Xxehan", 1, 3, False, False, False),
+        ("Wellon", 1, 2, False, False, False),
+        ("Tar'mann", 1, 1, False, False, False),
+        ("Thibah", 1, 1, False, False, False),
+        ("A Wormhole", 0, 0, True, False, False),
+        ("B Wormhole", 0, 0, True, False, False),
+        ("Asteroid Field", 0, 0, False, True, False),
+        ("Asteroid Field", 0, 0, False, True, False),
+        ("Supernova", 0, 0, False, True, False),
+        ("Nebula", 0, 0, False, True, False),
+        ("Gravity Rift", 0, 0, False, True, False),
+        ("Blank", 0, 0, False, False, True),
+        ("Blank", 0, 0, False, False, True),
+        ("Blank", 0, 0, False, False, True),
+        ("Blank", 0, 0, False, False, True),
+        ("Blank", 0, 0, False, False, True),
+    ]

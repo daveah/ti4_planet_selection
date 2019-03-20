@@ -1,196 +1,20 @@
 #!/usr/bin/env python
 import random
+from _ti4_load_planets import _ti4_load_planets
+from _ti4_load_configs import _ti4_load_configs
+from _ti4_load_formatters import _ti4_load_formatters
 
 # Reference data - immutable
 num_iterations = 100
-# tiles is a vector of tuples
-#   each tuple consists of name, number of resource, number of influence,
-#   bool for whether tile is a wormhole,
-#   bool for whether tile is an anomaly,
-#   bool for whether tile is a blank,
-tiles = [
-    ("Mecatol Rex", 1, 6, False, False, False),
-    ("Bereg, Lirta IV", 5, 4, False, False, False),
-    ("Abyz, Fria", 5, 0, False, False, False),
-    ("New Albion, Starpoint", 4, 2, False, False, False),
-    ("Arnor, Lor", 3, 3, False, False, False),
-    ("Mellon, Zohbat", 3, 3, False, False, False),
-    ("Corneeq, Resculon", 3, 2, False, False, False),
-    ("Lodor", 3, 1, True, False, False),
-    ("Lazar, Sakulag", 3, 1, False, False, False),
-    ("Centauri, Gral", 2, 4, False, False, False),
-    ("Tequ'ran, Torkan", 2, 3, False, False, False),
-    ("Vefut II", 2, 2, False, False, False),
-    ("Saudor", 2, 2, False, False, False),
-    ("Quann", 2, 1, True, False, False),
-    ("Arinam, Meer", 1, 6, False, False, False),
-    ("Qucen'n, Rarron", 1, 5, False, False, False),
-    ("Mehar Xull", 1, 3, False, False, False),
-    ("Dal Bootha, Xxehan", 1, 3, False, False, False),
-    ("Wellon", 1, 2, False, False, False),
-    ("Tar'mann", 1, 1, False, False, False),
-    ("Thibah", 1, 1, False, False, False),
-    ("A Wormhole", 0, 0, True, False, False),
-    ("B Wormhole", 0, 0, True, False, False),
-    ("Asteroid Field", 0, 0, False, True, False),
-    ("Asteroid Field", 0, 0, False, True, False),
-    ("Supernova", 0, 0, False, True, False),
-    ("Nebula", 0, 0, False, True, False),
-    ("Gravity Rift", 0, 0, False, True, False),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-]
 
-# allocations of tiles by number of players
-#   dictionary of config type to a dictionary of allocations
-#   {
-#    "num_players": number of players,
-#    "num_tiles": number_of_tiles_per_player,
-#    "resource_influence_allocations": [(resource_allocation_player_1, influence_allocation_player_1), ...],
-#    # Wormholes will be allocated to first <num_wormholes> players
-#    # Allocation of specials (other than wormholes) to be randomly shuffled
-#    "specials_shuffled": [(total_specials_player_n, min_anomolies_player_n, min_blanks_player_n), ...],
-#    # Allocation of specials fixed to a given player number
-#    "specials_fixed": [(total_specials_player_1, min_anomolies_player_1, min_blanks_player_1), ...],
-#   }
-#   "specials_fixed" is optional
-allocations = {
-    # 3 player game with all wormholes and 6 blanks/anomolies in play.
-    # Moderate resources.
-    (3, "default"): {
-        "num_players": 3,
-        "num_tiles": 8,
-        "resource_influence_allocations": [(13, 14), (13, 14), (13, 14)],
-        "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1)],
-    },
-    # 3 player game with all wormholes and 4 other red tiles in play.
-    # High resources.
-    # Uses base rules for red system allocation.
-    # No balancing of blanks and anomalies.
-    (3, "original"): {
-        "num_players": 3,
-        "num_tiles": 8,
-        "resource_influence_allocations": [(14, 15), (14, 15), (14, 15)],
-        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0)],
-        "specials_fixed": [(1, 0, 0), (2, 0, 0), (1, 0, 0)],
-    },
-    # 4 player game with all tiles in play.
-    (4, "default"): {
-        "num_players": 4,
-        "num_tiles": 8,
-        "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
-        "specials_shuffled": [(3, 1, 1), (3, 1, 1), (2, 1, 1), (2, 1, 1)],
-    },
-    # 4 player game with all tiles in play.
-    # Uses base rules for red system allocation.
-    # No balancing of blanks and anomalies.
-    (4, "original"): {
-        "num_players": 4,
-        "num_tiles": 8,
-        "resource_influence_allocations": [(11, 13), (11, 12), (12, 12), (12, 12)],
-        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
-        "specials_fixed": [(3, 0, 0), (3, 0, 0), (2, 0, 0), (2, 0, 0)],
-    },
-    # 5 player game with one blank and one 1/1 system removed.
-    (5, "default"): {
-        "num_players": 5,
-        "num_tiles": 6,
-        "resource_influence_allocations": [(9, 10), (9, 10), (9, 10), (9, 9), (9, 9)],
-        "specials_shuffled": [(2, 1, 1), (2, 1, 1), (2, 1, 1), (1, 1, 0), (1, 1, 0)],
-        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 0, 1)]
-    },
-    # 5 player game with two 1/1 systems removed.
-    # Uses base rules for red system allocation.
-    # No balancing of blanks and anomalies
-    (5, "original"): {
-        "num_players": 5,
-        "num_tiles": 6,
-        "resource_influence_allocations": [(10, 9), (9, 10), (9, 10), (9, 10), (9, 10)],
-        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
-        "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0)]
-    },
-    # 5 player game configured for use with a warp zone.
-    (5, "warp"): {
-        "num_players": 5,
-        "num_tiles": 5,
-        "resource_influence_allocations": [(8, 9), (8, 9), (8, 9), (8, 9), (8, 9)],
-        "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1)],
-        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0)]
-    },
-    # 6 player game with two blank systems removed.
-    (6, "default"): {
-        "num_players": 6,
-        "num_tiles": 5,
-        "resource_influence_allocations": [(8, 8), (8, 8), (8, 8), (8, 8), (7, 8), (7, 9)],
-        "specials_shuffled": [(1, 1, 0), (1, 1, 0), (1, 1, 0), (1, 0, 1), (1, 0, 1), (1, 0, 1)],
-        "specials_fixed": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (1, 1, 0), (1, 1, 0)]
-    },
-    # 6 player game with two 1/1 systems removed.
-    # Uses base rules for red system allocation.
-    # No balancing of blanks and anomalies.
-    (6, "original"): {
-        "num_players": 6,
-        "num_tiles": 5,
-        "resource_influence_allocations": [(8, 7), (8, 8), (7, 8), (7, 8), (7, 8), (7, 8)],
-        "specials_shuffled": [(0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0), (0, 0, 0)],
-        "specials_fixed": [(2, 0, 0), (2, 0, 0), (1, 0, 0), (1, 0, 0), (2, 0, 0), (2, 0, 0)]
-    },
-}
+# Load tile information
+tiles = _ti4_load_planets()
+
+# Load configurations
+allocations = _ti4_load_configs()
 
 # Configurations of various formatters
-formatters = {
-    "Text": {
-        "Title Pre": "",
-        "Title Post": "\n",
-        "Table Pre": "",
-        "System Pre": "  ",
-        "Col1 Pre": "Name: ",
-        "Col2 Pre": "; Resource: ",
-        "Col3 Pre": "; Influence: ",
-        "Col4 Pre": "; ",
-        "Col5 Pre": "",
-        "Col6 Pre": "",
-        "System Post": "\n",
-        "Table Post": "",
-        "Summary Pre": "  ",
-        "Summary Post": "\n",
-        "Planet Formatter": "{:22}",
-        "Error Pre": "",
-        "Error Post": "\n",
-    },
-    "HTML": {
-        "Title Pre": "<h2>",
-        "Title Post": "</h2>",
-        "Table Pre": (
-            "<table><tr>" +
-            "<th>System Name</th>" +
-            "<th>Resources</th>" +
-            "<th>Influence</th>" +
-            "<th>Wormhole</th>" +
-            "<th>Anomaly</th>" +
-            "<th>Blank</th>" +
-            "</tr>"
-        ),
-        "System Pre": "<tr><td>",
-        "Col1 Pre": "",
-        "Col2 Pre": "</td><td>",
-        "Col3 Pre": "</td><td>",
-        "Col4 Pre": "</td><td>",
-        "Col5 Pre": "</td><td>",
-        "Col6 Pre": "</td><td>",
-        "System Sep": "",
-        "System Post": "</td></tr>",
-        "Table Post": "</table>",
-        "Summary Pre": "<p><i>",
-        "Summary Post": "</i></p>",
-        "Planet Formatter": "{}",
-        "Error Pre": "<h2>Error</h2><p>",
-        "Error Post": "</p>",
-    },
-}
+formatters = _ti4_load_formatters()
 
 # Extract reference data into working vectors
 # All tile names
