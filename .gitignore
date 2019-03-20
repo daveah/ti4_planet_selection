@@ -1,7 +1,8 @@
-# C++
+# C++ (with cmake)
 release/
 debug/
 rel_with_debug/
+Makefile
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
