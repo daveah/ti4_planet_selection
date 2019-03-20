@@ -1,4 +1,5 @@
 #include "deck_generator.hpp"
+#include "config.hpp"
 #include "tile_info.hpp"
 #include <algorithm>
 #include <functional>
@@ -15,7 +16,7 @@ using TileInfoVector = std::vector<TileInfo>;
 using Data = DeckGenerator::Data;
 using UData = DeckGenerator::UData;
 using ConfigSet = DeckGenerator::ConfigSet;
-using AllocationSet = std::unordered_map<std::string, ConfigSet>;
+using AllocationSet = std::unordered_map<Config, ConfigSet>;
 
 const TileInfoVector tiles = {
     {"Mecatol Rex", 1, 6, false, false, false},
@@ -75,8 +76,8 @@ const UData anomalies = extract_indices(is_anomaly);
 const UData blanks = extract_indices(is_blank);
 
 const AllocationSet
-    allocations = // Allocations of resources for each configuration
-    {{"3default", // 3 Players, default
+    allocations =     // Allocations of resources for each configuration
+    {{{3, "default"}, // 3 Players, default
       {
           {"num_players", {3}},
           {"num_tiles", {8}},
@@ -86,7 +87,7 @@ const AllocationSet
           {"specials_shuffled_anomalies", {1, 1, 1}},
           {"specials_shuffled_blanks", {1, 1, 1}},
       }},
-     {"3original", // 3 Players, original
+     {{3, "original"}, // 3 Players, original
       {
           {"num_players", {3}},
           {"num_tiles", {8}},
@@ -99,7 +100,7 @@ const AllocationSet
           {"specials_fixed_anomalies", {0, 0, 0}},
           {"specials_fixed_blanks", {0, 0, 0}},
       }},
-     {"4default", // 4 Player, default
+     {{4, "default"}, // 4 Player, default
       {
           {"num_players", {4}},
           {"num_tiles", {8}},
@@ -109,7 +110,7 @@ const AllocationSet
           {"specials_shuffled_anomalies", {1, 1, 1, 1}},
           {"specials_shuffled_blanks", {1, 1, 1, 1}},
       }},
-     {"4original", // 4 Player, original
+     {{4, "original"}, // 4 Player, original
       {
           {"num_players", {4}},
           {"num_tiles", {8}},
@@ -122,7 +123,7 @@ const AllocationSet
           {"specials_fixed_anomalies", {0, 0, 0, 0}},
           {"specials_fixed_blanks", {0, 0, 0, 0}},
       }},
-     {"5default", // 5 Player, default
+     {{5, "default"}, // 5 Player, default
       {
           {"num_players", {5}},
           {"num_tiles", {6}},
@@ -135,7 +136,7 @@ const AllocationSet
           {"specials_fixed_anomalies", {0, 0, 0, 0, 0}},
           {"specials_fixed_blanks", {0, 0, 0, 0, 1}},
       }},
-     {"5original", // 5 Player, original
+     {{5, "original"}, // 5 Player, original
       {
           {"num_players", {5}},
           {"num_tiles", {6}},
@@ -148,7 +149,7 @@ const AllocationSet
           {"specials_fixed_anomalies", {0, 0, 0, 0, 0}},
           {"specials_fixed_blanks", {0, 0, 0, 0, 0}},
       }},
-     {"5warp", // 5 Players, warp
+     {{5, "warp"}, // 5 Players, warp
       {
           {"num_players", {5}},
           {"num_tiles", {5}},
@@ -161,7 +162,7 @@ const AllocationSet
           {"specials_fixed_anomalies", {0, 0, 0, 0, 1}},
           {"specials_fixed_blanks", {0, 0, 0, 0, 0}},
       }},
-     {"6default", // 6 Player, default
+     {{6, "default"}, // 6 Player, default
       {
           {"num_players", {6}},
           {"num_tiles", {5}},
@@ -174,7 +175,7 @@ const AllocationSet
           {"specials_fixed_anomalies", {0, 0, 0, 0, 1, 1}},
           {"specials_fixed_blanks", {0, 0, 0, 0, 0, 0}},
       }},
-     {"6original", // 6 Player, original
+     {{6, "original"}, // 6 Player, original
       {
           {"num_players", {6}},
           {"num_tiles", {5}},
@@ -190,7 +191,7 @@ const AllocationSet
 
 const auto config_finder =
     [](const num_players &num_players_, const style &style_) -> const auto & {
-  std::string config = num_players_.str() + style_.str();
+  Config config(num_players_.value(), style_.str());
   if (auto found = allocations.find(config); found == allocations.end()) {
     throw std::string("Invalid Configuration");
   } else {
