@@ -10,7 +10,8 @@
             "options": {
                 "cwd": "${workspaceRoot}/cpp"
             },
-            "group": "build"
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "label": "build release",
@@ -50,6 +51,22 @@
             "problemMatcher": [
                 "$gcc"
             ]
+        },
+        {
+            "label": "valgrind",
+            "type": "shell",
+            "command": "valgrind",
+            "options": {
+                "cwd": "${workspaceRoot}/cpp/debug"
+            },
+            "args": [
+                "--leak-check=full",
+                "--show-reachable=yes",
+                "--track-origins=yes",
+                "${workspaceRoot}/cpp/debug/ti4_planet_selection",
+                "4"
+            ],
+            "problemMatcher": []
         }
     ]
 }
