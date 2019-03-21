@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <vector>
 
+namespace TI4 {
+
 class DeckGenerator {
 public:
   DeckGenerator(const num_players &num_players_, const style &style_);
@@ -60,3 +62,5 @@ private:
   // Vector denoting whether a tile has been used - 0 = no, 1 = yes
   Data _used;
 };
+
+} // namespace TI4

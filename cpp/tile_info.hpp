@@ -2,6 +2,8 @@
 
 #include <string>
 
+namespace TI4 {
+
 class TileInfo {
 public:
   TileInfo();
@@ -29,3 +31,5 @@ private:
   bool _is_anomaly;
   bool _is_blank;
 };
+
+} // namespace TI4

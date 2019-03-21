@@ -3,6 +3,8 @@
 #include <functional>
 #include <string>
 
+namespace TI4 {
+
 class Config {
 public:
   Config(int num_players_, std::string style_);
@@ -28,15 +30,19 @@ private:
   std::string _style;
 };
 
+} // namespace TI4
+
 namespace std {
+
 template <>
-struct hash<Config> {
-  using argument_type = Config;
+struct hash<TI4::Config> {
+  using argument_type = TI4::Config;
   using result_type = std::size_t;
-  std::size_t operator()(const Config &config_) const noexcept {
+  std::size_t operator()(const TI4::Config &config_) const noexcept {
     auto h1 = std::hash<int>()(config_.num_players());
     auto h2 = std::hash<std::string>()(config_.style());
     return h1 ^ (h2 << 1);
   }
 };
+
 } // namespace std

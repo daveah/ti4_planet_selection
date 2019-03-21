@@ -1,6 +1,8 @@
 #include "num_players.hpp"
 #include <boost/lexical_cast.hpp>
 
+namespace TI4 {
+
 num_players::num_players() : _num_players(6) {
 }
 
@@ -25,3 +27,5 @@ std::string num_players::str() const {
 const char *num_players::help() {
   return "Number of players {3, 4, 5, 6}";
 }
+
+} // namespace TI4

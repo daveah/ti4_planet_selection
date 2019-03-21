@@ -1,5 +1,7 @@
 #include <style.hpp>
 
+namespace TI4 {
+
 style::style() : _style(style_store::DEFAULT) {
 }
 
@@ -52,3 +54,5 @@ std::string style::str(style_store style_) {
 const char *style::help() {
   return "Galaxy Style {default, original, warp}";
 }
+
+} // namespace TI4

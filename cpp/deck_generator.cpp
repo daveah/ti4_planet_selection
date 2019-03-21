@@ -12,6 +12,8 @@
 std::random_device rd;
 std::mt19937 mt(rd());
 
+namespace TI4 {
+
 using TileInfoVector = std::vector<TileInfo>;
 using Data = DeckGenerator::Data;
 using UData = DeckGenerator::UData;
@@ -441,3 +443,5 @@ void DeckGenerator::allocate_planet(std::size_t planet_num_,
 void DeckGenerator::allocate_planet_shared(std::size_t planet_num_) {
   allocate_planet_helper(planet_num_, _used, _shared_planets);
 }
+
+} // namespace TI4

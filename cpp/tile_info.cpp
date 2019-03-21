@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <sstream>
 
+namespace TI4 {
+
 TileInfo::TileInfo()
     : _name("error"), _resource(0), _influence(0), _is_wormhole(false),
       _is_anomaly(false), _is_blank(false) {
@@ -48,3 +50,5 @@ std::string TileInfo::print() const {
   str << (is_blank() ? "B" : " ");
   return str.str();
 }
+
+} // namespace TI4

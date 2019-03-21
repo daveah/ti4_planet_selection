@@ -6,14 +6,14 @@
 
 int main(int argc, char **argv) {
   namespace po = boost::program_options;
-  num_players np_default, np;
-  style st_default, st;
+  TI4::num_players np_default, np;
+  TI4::style st_default, st;
   po::options_description desc("Options");
   desc.add_options()("help,h", "Print help messages") // Help command
-      ("style,s", po::value<style>(&st_default),
-       style::help()) // Set the style
-      ("num_players", po::value<num_players>(&np_default)->required(),
-       num_players::help()) // Set the number of players
+      ("style,s", po::value<TI4::style>(&st_default),
+       TI4::style::help()) // Set the style
+      ("num_players", po::value<TI4::num_players>(&np_default)->required(),
+       TI4::num_players::help()) // Set the number of players
       ;
   po::positional_options_description positionalOptions;
   positionalOptions.add("num_players", 1);
@@ -32,12 +32,12 @@ int main(int argc, char **argv) {
       return 1;
     }
     if (vm.count("num_players")) {
-      np = vm["num_players"].as<num_players>();
+      np = vm["num_players"].as<TI4::num_players>();
     } else {
       throw po::validation_error(po::validation_error::invalid_option_value);
     }
     if (vm.count("style")) {
-      st = vm["style"].as<style>();
+      st = vm["style"].as<TI4::style>();
       if (st.is_warp() && np.value() != 5) {
         throw po::validation_error(po::validation_error::invalid_option_value);
       }
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     return -1;
   }
   try {
-    DeckGenerator dg(np, st);
+    TI4::DeckGenerator dg(np, st);
   } catch (const std::string &st) {
     std::cout << st << std::endl;
   }

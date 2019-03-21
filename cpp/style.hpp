@@ -3,6 +3,8 @@
 #include <boost/program_options.hpp>
 #include <string>
 
+namespace TI4 {
+
 class style {
 public:
   enum class style_store { DEFAULT, ORIGINAL, WARP };
@@ -34,3 +36,5 @@ public:
 private:
   style_store _style;
 };
+
+} // namespace TI4

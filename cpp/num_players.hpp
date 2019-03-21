@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <string>
 
+namespace TI4 {
+
 class num_players {
 public:
   num_players();
@@ -28,3 +30,5 @@ public:
 private:
   int _num_players;
 };
+
+} // namespace TI4
