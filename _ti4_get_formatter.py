@@ -2,9 +2,9 @@
 
 
 # Return tile information
-def _ti4_load_formatters():
-    return {
-        "Text": {
+def _ti4_get_formatter(name):
+    if name == "Text":
+        return {
             "Title Pre": "",
             "Title Post": "\n",
             "Table Pre": "",
@@ -22,8 +22,9 @@ def _ti4_load_formatters():
             "Planet Formatter": "{:22}",
             "Error Pre": "",
             "Error Post": "\n",
-        },
-        "HTML": {
+        }
+    elif name == "HTML":
+        return {
             "Title Pre": "<h2>",
             "Title Post": "</h2>",
             "Table Pre": (
@@ -51,5 +52,6 @@ def _ti4_load_formatters():
             "Planet Formatter": "{}",
             "Error Pre": "<h2>Error</h2><p>",
             "Error Post": "</p>",
-        },
-    }
+        }
+    else:
+        raise ValueError("Request for invalid formatter: {}".format(name))

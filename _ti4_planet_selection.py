@@ -2,7 +2,7 @@
 import random
 from _ti4_load_planets import _ti4_load_planets
 from _ti4_load_configs import _ti4_load_configs
-from _ti4_load_formatters import _ti4_load_formatters
+from _ti4_get_formatter import _ti4_get_formatter
 
 # Reference data - immutable
 num_iterations = 100
@@ -12,9 +12,6 @@ tiles = _ti4_load_planets()
 
 # Load configurations
 allocations = _ti4_load_configs()
-
-# Configurations of various formatters
-formatters = _ti4_load_formatters()
 
 # Extract reference data into working vectors
 # All tile names
@@ -279,9 +276,9 @@ def ti4_planet_selection(num_players, style, formatter_name=None):
     # By default use an html formatter
     formatter = None
     if formatter_name is None:
-        formatter = formatters["HTML"]
+        formatter = _ti4_get_formatter("HTML")
     else:
-        formatter = formatters[formatter_name]
+        formatter = _ti4_get_formatter(formatter_name)
     results = None
     success = False
     if config not in allocations:
