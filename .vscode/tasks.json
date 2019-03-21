@@ -4,6 +4,15 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "configure",
+            "type": "shell",
+            "command": "${workspaceRoot}/cpp/bootstrap.sh",
+            "options": {
+                "cwd": "${workspaceRoot}/cpp"
+            },
+            "group": "build"
+        },
+        {
             "label": "build release",
             "type": "shell",
             "command": "make",
