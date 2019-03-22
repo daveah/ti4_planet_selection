@@ -43,7 +43,7 @@ find_package(pybind11 REQUIRED)
 # Bash
 find_program(BASH_PROGRAM bash)
 
-# Include all libraries
+# Libraries
 
 # Executable
 file(GLOB ALL_SOURCES CONFIGURE_DEPENDS "*.cpp")
@@ -52,7 +52,8 @@ target_include_directories(ti4_planet_selection PUBLIC
   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
 target_link_libraries(ti4_planet_selection
   Boost::boost
-  Boost::program_options)
+  Boost::program_options
+  pybind11::embed)
 
 # Installation
 install(
