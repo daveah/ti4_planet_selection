@@ -7,13 +7,14 @@ namespace TI4 {
 class TileInfo {
 public:
   TileInfo();
-  TileInfo(const std::string &name_, int resource_, int influence_,
-           bool is_wormhole_, bool is_anomaly_, bool is_blank_);
+  TileInfo(int tile_num_, const std::string &name_, int resource_,
+           int influence_, bool is_wormhole_, bool is_anomaly_, bool is_blank_);
   TileInfo(const TileInfo &) = default;
   TileInfo(TileInfo &&) = default;
   TileInfo &operator=(const TileInfo &) = default;
   TileInfo &operator=(TileInfo &&) = default;
 
+  int tile_num() const;
   const std::string &name() const;
   int resource() const;
   int influence() const;
@@ -24,6 +25,7 @@ public:
   std::string print() const;
 
 private:
+  int _tile_num;
   std::string _name;
   int _resource;
   int _influence;
