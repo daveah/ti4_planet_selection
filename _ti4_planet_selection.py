@@ -14,18 +14,20 @@ tiles = _ti4_load_planets()
 allocations = _ti4_load_configs()
 
 # Extract reference data into working vectors
+# All tile numbers
+numbers = [tile[0] for tile in tiles]
 # All tile names
-names = [tile[0] for tile in tiles]
+names = [tile[1] for tile in tiles]
 # Resources for each tile
-resource = [tile[1] for tile in tiles]
+resource = [tile[2] for tile in tiles]
 # Influence for each tile
-influence = [tile[2] for tile in tiles]
+influence = [tile[3] for tile in tiles]
 # Indices of wormhole systems
-wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][3]]
+wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
 # Indices of anomaly systems (red border)
-anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
+anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
 # Indices of blank systems
-blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
+blank = [ii for ii in range(0, len(tiles)) if tiles[ii][6]]
 
 
 # Hold a set of results
@@ -248,12 +250,14 @@ def print_planets(name, planets, formatter):
             blnk = "B"
         total_resource = total_resource + resource[ii]
         total_influence = total_influence + influence[ii]
+        planet_number = numbers[ii]
         planet_name = formatter["Planet Formatter"].format(
             names[ii])
         output = (output +
-                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
+                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
                   format(
                       formatter["System Pre"],
+                      formatter["Col0 Pre"], planet_number,
                       formatter["Col1 Pre"], planet_name,
                       formatter["Col2 Pre"], resource[ii],
                       formatter["Col3 Pre"], influence[ii],
