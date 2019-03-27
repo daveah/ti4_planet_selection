@@ -3,46 +3,48 @@ import random
 
 # Reference data - immutable
 num_iterations = 100
+
 # tiles is a vector of tuples
-#   each tuple consists of name, number of resource, number of influence,
+#   each tuple consists of planet number, name, number of resource, number of influence,
 #   bool for whether tile is a wormhole,
 #   bool for whether tile is an anomaly,
 #   bool for whether tile is a blank,
 tiles = [
-    ("Mecatol Rex", 1, 6, False, False, False),
-    ("Bereg, Lirta IV", 5, 4, False, False, False),
-    ("Abyz, Fria", 5, 0, False, False, False),
-    ("New Albion, Starpoint", 4, 2, False, False, False),
-    ("Arnor, Lor", 3, 3, False, False, False),
-    ("Mellon, Zohbat", 3, 3, False, False, False),
-    ("Corneeq, Resculon", 3, 2, False, False, False),
-    ("Lodor", 3, 1, True, False, False),
-    ("Lazar, Sakulag", 3, 1, False, False, False),
-    ("Centauri, Gral", 2, 4, False, False, False),
-    ("Tequ'ran, Torkan", 2, 3, False, False, False),
-    ("Vefut II", 2, 2, False, False, False),
-    ("Saudor", 2, 2, False, False, False),
-    ("Quann", 2, 1, True, False, False),
-    ("Arinam, Meer", 1, 6, False, False, False),
-    ("Qucen'n, Rarron", 1, 5, False, False, False),
-    ("Mehar Xull", 1, 3, False, False, False),
-    ("Dal Bootha, Xxehan", 1, 3, False, False, False),
-    ("Wellon", 1, 2, False, False, False),
-    ("Tar'mann", 1, 1, False, False, False),
-    ("Thibah", 1, 1, False, False, False),
-    ("A Wormhole", 0, 0, True, False, False),
-    ("B Wormhole", 0, 0, True, False, False),
-    ("Asteroid Field", 0, 0, False, True, False),
-    ("Asteroid Field", 0, 0, False, True, False),
-    ("Supernova", 0, 0, False, True, False),
-    ("Nebula", 0, 0, False, True, False),
-    ("Gravity Rift", 0, 0, False, True, False),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
+    (18, "Mecatol Rex", 1, 6, False, False, False),
+    (35, "Bereg, Lirta IV", 5, 4, False, False, False),
+    (38, "Abyz, Fria", 5, 0, False, False, False),
+    (27, "New Albion, Starpoint", 4, 2, False, False, False),
+    (36, "Arnor, Lor", 3, 3, False, False, False),
+    (30, "Mellon, Zohbat", 3, 3, False, False, False),
+    (33, "Corneeq, Resculon", 3, 2, False, False, False),
+    (26, "Lodor", 3, 1, True, False, False),
+    (31, "Lazar, Sakulag", 3, 1, False, False, False),
+    (34, "Centauri, Gral", 2, 4, False, False, False),
+    (28, "Tequ'ran, Torkan", 2, 3, False, False, False),
+    (20, "Vefut II", 2, 2, False, False, False),
+    (23, "Saudor", 2, 2, False, False, False),
+    (25, "Quann", 2, 1, True, False, False),
+    (37, "Arinam, Meer", 1, 6, False, False, False),
+    (29, "Qucen'n, Rarron", 1, 5, False, False, False),
+    (24, "Mehar Xull", 1, 3, False, False, False),
+    (32, "Dal Bootha, Xxehan", 1, 3, False, False, False),
+    (19, "Wellon", 1, 2, False, False, False),
+    (22, "Tar'mann", 1, 1, False, False, False),
+    (21, "Thibah", 1, 1, False, False, False),
+    (39, "A Wormhole", 0, 0, True, False, False),
+    (40, "B Wormhole", 0, 0, True, False, False),
+    (44, "Asteroid Field", 0, 0, False, True, False),
+    (45, "Asteroid Field", 0, 0, False, True, False),
+    (43, "Supernova", 0, 0, False, True, False),
+    (42, "Nebula", 0, 0, False, True, False),
+    (41, "Gravity Rift", 0, 0, False, True, False),
+    (46, "Blank", 0, 0, False, False, True),
+    (47, "Blank", 0, 0, False, False, True),
+    (48, "Blank", 0, 0, False, False, True),
+    (49, "Blank", 0, 0, False, False, True),
+    (50, "Blank", 0, 0, False, False, True),
 ]
+
 
 # allocations of tiles by number of players
 #   dictionary of config type to a dictionary of allocations
@@ -147,7 +149,8 @@ formatters = {
         "Title Post": "\n",
         "Table Pre": "",
         "System Pre": "  ",
-        "Col1 Pre": "Name: ",
+        "Col0 Pre": "Num: ",
+        "Col1 Pre": "; Name: ",
         "Col2 Pre": "; Resource: ",
         "Col3 Pre": "; Influence: ",
         "Col4 Pre": "; ",
@@ -166,6 +169,7 @@ formatters = {
         "Title Post": "</h2>",
         "Table Pre": (
             "<table><tr>" +
+            "<th>Num</th>" +
             "<th>System Name</th>" +
             "<th>Resources</th>" +
             "<th>Influence</th>" +
@@ -175,7 +179,8 @@ formatters = {
             "</tr>"
         ),
         "System Pre": "<tr><td>",
-        "Col1 Pre": "",
+        "Col0 Pre": "",
+        "Col1 Pre": "</td><td>",
         "Col2 Pre": "</td><td>",
         "Col3 Pre": "</td><td>",
         "Col4 Pre": "</td><td>",
@@ -193,18 +198,20 @@ formatters = {
 }
 
 # Extract reference data into working vectors
+# All tile numbers
+numbers = [tile[0] for tile in tiles]
 # All tile names
-names = [tile[0] for tile in tiles]
+names = [tile[1] for tile in tiles]
 # Resources for each tile
-resource = [tile[1] for tile in tiles]
+resource = [tile[2] for tile in tiles]
 # Influence for each tile
-influence = [tile[2] for tile in tiles]
+influence = [tile[3] for tile in tiles]
 # Indices of wormhole systems
-wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][3]]
+wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
 # Indices of anomaly systems (red border)
-anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
+anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
 # Indices of blank systems
-blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
+blank = [ii for ii in range(0, len(tiles)) if tiles[ii][6]]
 
 
 # Hold a set of results
@@ -427,12 +434,14 @@ def print_planets(name, planets, formatter):
             blnk = "B"
         total_resource = total_resource + resource[ii]
         total_influence = total_influence + influence[ii]
+        planet_number = numbers[ii]
         planet_name = formatter["Planet Formatter"].format(
             names[ii])
         output = (output +
-                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
+                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
                   format(
                       formatter["System Pre"],
+                      formatter["Col0 Pre"], planet_number,
                       formatter["Col1 Pre"], planet_name,
                       formatter["Col2 Pre"], resource[ii],
                       formatter["Col3 Pre"], influence[ii],
