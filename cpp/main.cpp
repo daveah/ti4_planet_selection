@@ -1,6 +1,7 @@
 #include "deck_generator.hpp"
 #include "num_players.hpp"
 #include "style.hpp"
+#include "validation_error.hpp"
 #include <boost/program_options.hpp>
 #include <iostream>
 
@@ -42,6 +43,9 @@ int main(int argc, char **argv) {
         throw po::validation_error(po::validation_error::invalid_option_value);
       }
     }
+  } catch (TI4::ValidationError &ee) {
+    std::cerr << "ERROR: " << ee.what() << std::endl;
+    return -1;
   } catch (po::required_option &ee) {
     std::cerr << "ERROR: " << ee.what() << std::endl;
     return -1;

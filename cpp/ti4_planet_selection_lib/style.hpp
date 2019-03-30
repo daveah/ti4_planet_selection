@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/program_options.hpp>
 #include <string>
 
 namespace TI4 {

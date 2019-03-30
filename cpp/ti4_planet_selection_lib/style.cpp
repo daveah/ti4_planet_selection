@@ -1,4 +1,5 @@
-#include <style.hpp>
+#include "style.hpp"
+#include "validation_error.hpp"
 
 namespace TI4 {
 
@@ -13,8 +14,9 @@ style::style(const std::string &style_) {
   } else if (style_ == "warp") {
     _style = style_store::WARP;
   } else {
-    namespace po = boost::program_options;
-    throw po::validation_error(po::validation_error::invalid_option_value);
+    throw ValidationError(
+        "Invalid style, {default, original, warp} allowed, you requested ")
+        << style_;
   }
 }
 

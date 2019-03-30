@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/program_options.hpp>
 #include <cstdlib>
 #include <string>
 
@@ -9,6 +8,7 @@ namespace TI4 {
 class num_players {
 public:
   num_players();
+  num_players(int num_players_);
   num_players(const std::string &num_players_);
   num_players(const num_players &) = default;
   num_players(num_players &&) = default;
@@ -29,6 +29,9 @@ public:
 
 private:
   int _num_players;
+
+  static constexpr inline int _min_players = 3;
+  static constexpr inline int _max_players = 6;
 };
 
 } // namespace TI4

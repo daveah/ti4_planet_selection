@@ -2,6 +2,7 @@
 release/
 debug/
 rel_with_debug/
+install/
 Makefile
 
 # VSCode

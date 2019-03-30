@@ -1,5 +1,4 @@
 #include "tile_info_vector.hpp"
-#include <pybind11/eval.h>
 
 namespace TI4 {
 

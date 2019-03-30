@@ -44,19 +44,34 @@ find_package(pybind11 REQUIRED)
 find_program(BASH_PROGRAM bash)
 
 # Libraries
+add_subdirectory(ti4_planet_selection_lib)
 
 # Executable
-file(GLOB ALL_SOURCES CONFIGURE_DEPENDS "*.cpp")
-add_executable(ti4_planet_selection ${ALL_SOURCES})
-target_include_directories(ti4_planet_selection PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>)
-target_link_libraries(ti4_planet_selection
+add_executable(ti4ps main.cpp)
+target_include_directories(ti4ps PUBLIC 
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/ti4_planet_selection_lib>)
+target_link_libraries(ti4ps
+  PRIVATE
+  ti4_planet_selection_lib
   Boost::boost
-  Boost::program_options
-  pybind11::embed)
+  Boost::program_options)
+
+set(CMAKE_INSTALL_RPATH "${Python3_LIBRARY_DIRS};${Boost_LIBRARY_DIRS}")
+pybind11_add_module(ti4_planet_selection python_main.cpp)
+target_include_directories(ti4_planet_selection PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/ti4_planet_selection_lib>
+  ${PYTHON_INCLUDE_DIRS})
+target_link_libraries(ti4_planet_selection
+  PRIVATE
+  ti4_planet_selection_lib
+  Boost::boost
+  Python3::Python)
 
 # Installation
 install(
   TARGETS ti4_planet_selection
-  DESTINATION bin
+  DESTINATION python
   )
+install(
+  DIRECTORY python/
+  DESTINATION python)
