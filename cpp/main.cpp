@@ -49,6 +49,9 @@ int main(int argc, char **argv) {
   } catch (po::required_option &ee) {
     std::cerr << "ERROR: " << ee.what() << std::endl;
     return -1;
+  } catch (po::too_many_positional_options_error &ee) {
+    std::cerr << "ERROR: " << ee.what() << std::endl;
+    return -1;
   } catch (po::validation_error &ee) {
     std::cerr << "ERROR: " << ee.what() << std::endl;
     return -1;

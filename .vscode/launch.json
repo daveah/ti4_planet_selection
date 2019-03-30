@@ -8,9 +8,10 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/cpp/debug/ti4_planet_selection",
+            "program": "${workspaceFolder}/cpp/debug/ti4ps",
             "args": [
-                "4"
+                "4",
+                "default"
             ],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/cpp/debug",

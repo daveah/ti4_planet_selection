@@ -49,7 +49,7 @@ std::string style::str(style_store style_) {
   case style_store::WARP:
     return "warp";
   default:
-    throw 0;
+    throw ValidationError("Unknown style");
   }
 }
 
