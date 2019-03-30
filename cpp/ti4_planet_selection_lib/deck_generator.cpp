@@ -1,7 +1,9 @@
 #include "deck_generator.hpp"
 #include "config.hpp"
+#include "internal_error.hpp"
 #include "tile_info.hpp"
 #include "tile_info_vector.hpp"
+#include "validation_error.hpp"
 #include <algorithm>
 #include <functional>
 #include <iostream>
@@ -162,7 +164,9 @@ const auto config_finder =
     [](const num_players &num_players_, const style &style_) -> const auto & {
   Config config(num_players_.value(), style_.str());
   if (auto found = allocations.find(config); found == allocations.end()) {
-    throw std::string("Invalid Configuration");
+    throw ValidationError("Invalid Configuration: ")
+        << num_players_.str() << ", " << style_.str()
+        << " requested, but that combination does not exist";
   } else {
     return found->second;
   }
@@ -181,7 +185,8 @@ DeckGenerator::DeckGenerator(const num_players &num_players_,
     }
   }
   if (!success) {
-    throw std::string("Unable to converge");
+    throw InternalError("Unable to converge after ")
+        << _num_iterations << " iterations";
   }
   sweep_to_shared();
   print_planets();
@@ -390,7 +395,8 @@ void DeckGenerator::print_planets() const {
 const auto allocate_planet_helper = [](std::size_t planet_num_, Data &used_,
                                        UData &planet_vector_) {
   if (used_[planet_num_] == 1) {
-    throw std::string("Attempt to allocate already used tile");
+    throw InternalError("Attempt to allocate already used tile, number")
+        << planet_num_;
   }
   used_[planet_num_] = 1;
   planet_vector_.push_back(planet_num_);
@@ -399,7 +405,8 @@ const auto allocate_planet_helper = [](std::size_t planet_num_, Data &used_,
 void DeckGenerator::allocate_planet(std::size_t planet_num_,
                                     std::size_t player_num_) {
   if (_player_planets[player_num_].size() > _num_tiles) {
-    throw std::string("Too many tiles allocated to player");
+    throw InternalError("Too many tiles allocated to player num")
+        << player_num_;
   }
   allocate_planet_helper(planet_num_, _used, _player_planets[player_num_]);
   const auto &tile = tiles[planet_num_];

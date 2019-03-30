@@ -1,4 +1,5 @@
 #include "deck_generator.hpp"
+#include "internal_error.hpp"
 #include "num_players.hpp"
 #include "style.hpp"
 #include "validation_error.hpp"
@@ -24,7 +25,9 @@ void ti4_planet_selection(int num_players_, std::string style_) {
     style st(style_);
     DeckGenerator df(np, st);
   } catch (ValidationError &ee) {
-    std::cout << "Error: " << ee.what() << std::endl;
+    std::cout << ee.what() << std::endl;
+  } catch (InternalError &ee) {
+    std::cout << "Serious failure: " << ee.what() << std::endl;
   }
 }
 

@@ -40,7 +40,7 @@ private:
   void allocate_planet_shared(std::size_t planet_num_);
 
   // Configure the maximum number of iterations before failing
-  const static std::size_t _num_iterations = 100;
+  static constexpr inline std::size_t _num_iterations = 100;
 
   // Configuration
   ConfigSet _config;

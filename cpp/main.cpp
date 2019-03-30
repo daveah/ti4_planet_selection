@@ -1,4 +1,5 @@
 #include "deck_generator.hpp"
+#include "internal_error.hpp"
 #include "num_players.hpp"
 #include "style.hpp"
 #include "validation_error.hpp"
@@ -58,8 +59,10 @@ int main(int argc, char **argv) {
   }
   try {
     TI4::DeckGenerator dg(np, st);
-  } catch (const std::string &st) {
-    std::cout << st << std::endl;
+  } catch (TI4::ValidationError &ee) {
+    std::cout << ee.what() << std::endl;
+  } catch (TI4::InternalError &ee) {
+    std::cout << "Serious failure: " << ee.what() << std::endl;
   }
   return 0;
 }

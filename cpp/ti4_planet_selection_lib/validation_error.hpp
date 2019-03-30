@@ -12,9 +12,9 @@ public:
   }
   ValidationError(const std::string &what_) : _what(what_) {
   }
-  ValidationError(const ValidationError &rhs_) = default;
+  ValidationError(const ValidationError &) = default;
   ValidationError(ValidationError &&) = default;
-  ValidationError &operator=(const ValidationError &rhs_) = default;
+  ValidationError &operator=(const ValidationError &) = default;
   ValidationError &operator=(ValidationError &&) = default;
 
   virtual const char *what() const noexcept override {
