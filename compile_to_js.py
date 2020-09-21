@@ -28,8 +28,9 @@ if __name__ == '__main__':
             "verbose\n" +
             "open {}\n".format(args.url) +
             "user {} {}\n".format(args.username, args.password) +
+            "mkdir {}\n".format(args.directory) +
             "cd {}\n".format(args.directory) +
-            "mkdir -p __target__\n" +
+            "mkdir __target__\n" +
             "ascii\n")
         for file in file_list:
             ftp_cmd_line = (ftp_cmd_line +

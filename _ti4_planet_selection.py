@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import random
 
+
 # Reference data - immutable
 num_iterations = 100
 # tiles is a vector of tuples
@@ -8,40 +9,43 @@ num_iterations = 100
 #   bool for whether tile is a wormhole,
 #   bool for whether tile is an anomaly,
 #   bool for whether tile is a blank,
+#   tuple for traits (cultural, hazardous, industrial, placeholder)
+#   tuple for technology (red, green, blue, yellow)
 tiles = [
-    ("Mecatol Rex", 1, 6, False, False, False),
-    ("Bereg, Lirta IV", 5, 4, False, False, False),
-    ("Abyz, Fria", 5, 0, False, False, False),
-    ("New Albion, Starpoint", 4, 2, False, False, False),
-    ("Arnor, Lor", 3, 3, False, False, False),
-    ("Mellon, Zohbat", 3, 3, False, False, False),
-    ("Corneeq, Resculon", 3, 2, False, False, False),
-    ("Lodor", 3, 1, True, False, False),
-    ("Lazar, Sakulag", 3, 1, False, False, False),
-    ("Centauri, Gral", 2, 4, False, False, False),
-    ("Tequ'ran, Torkan", 2, 3, False, False, False),
-    ("Vefut II", 2, 2, False, False, False),
-    ("Saudor", 2, 2, False, False, False),
-    ("Quann", 2, 1, True, False, False),
-    ("Arinam, Meer", 1, 6, False, False, False),
-    ("Qucen'n, Rarron", 1, 5, False, False, False),
-    ("Mehar Xull", 1, 3, False, False, False),
-    ("Dal Bootha, Xxehan", 1, 3, False, False, False),
-    ("Wellon", 1, 2, False, False, False),
-    ("Tar'mann", 1, 1, False, False, False),
-    ("Thibah", 1, 1, False, False, False),
-    ("A Wormhole", 0, 0, True, False, False),
-    ("B Wormhole", 0, 0, True, False, False),
-    ("Asteroid Field", 0, 0, False, True, False),
-    ("Asteroid Field", 0, 0, False, True, False),
-    ("Supernova", 0, 0, False, True, False),
-    ("Nebula", 0, 0, False, True, False),
-    ("Gravity Rift", 0, 0, False, True, False),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
-    ("Blank", 0, 0, False, False, True),
+    ("Mecatol Rex", 1, 6, False, False, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Bereg, Lirta IV", 5, 4, False, False, False, (0, 2, 0, 0), (0, 0, 0, 0)),
+    ("Abyz, Fria", 5, 0, False, False, False, (0, 2, 0, 0), (0, 0, 0, 0)),
+    ("New Albion, Starpoint", 4, 2, False, False,
+     False, (0, 1, 1, 0), (0, 1, 0, 0)),
+    ("Arnor, Lor", 3, 3, False, False, False, (0, 0, 2, 0), (0, 0, 0, 0)),
+    ("Mellon, Zohbat", 3, 3, False, False, False, (1, 1, 0, 0), (0, 0, 0, 0)),
+    ("Corneeq, Resculon", 3, 2, False, False, False, (2, 0, 0, 0), (0, 0, 0, 0)),
+    ("Lodor", 3, 1, True, False, False, (1, 0, 0, 0), (0, 0, 0, 0)),
+    ("Lazar, Sakulag", 3, 1, False, False, False, (0, 1, 1, 0), (0, 0, 0, 1)),
+    ("Centauri, Gral", 2, 4, False, False, False, (1, 0, 1, 0), (0, 0, 1, 0)),
+    ("Tequ'ran, Torkan", 2, 3, False, False, False, (1, 1, 0, 0), (0, 0, 0, 0)),
+    ("Vefut II", 2, 2, False, False, False, (0, 1, 0, 0), (0, 0, 0, 0)),
+    ("Saudor", 2, 2, False, False, False, (0, 0, 1, 0), (0, 0, 0, 0)),
+    ("Quann", 2, 1, True, False, False, (1, 0, 0, 0), (0, 0, 0, 0)),
+    ("Arinam, Meer", 1, 6, False, False, False, (0, 1, 1, 0), (1, 0, 0, 0)),
+    ("Qucen'n, Rarron", 1, 5, False, False, False, (1, 0, 1, 0), (0, 0, 0, 0)),
+    ("Mehar Xull", 1, 3, False, False, False, (0, 1, 0, 0), (1, 0, 0, 0)),
+    ("Dal Bootha, Xxehan", 1, 3, False, False, False, (2, 0, 0, 0), (0, 0, 0, 0)),
+    ("Wellon", 1, 2, False, False, False, (0, 0, 1, 0), (0, 0, 0, 1)),
+    ("Tar'mann", 1, 1, False, False, False, (0, 0, 1, 0), (0, 1, 0, 0)),
+    ("Thibah", 1, 1, False, False, False, (0, 0, 1, 0), (0, 0, 1, 0)),
+    ("A Wormhole", 0, 0, True, False, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("B Wormhole", 0, 0, True, False, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Asteroid Field", 0, 0, False, True, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Asteroid Field", 0, 0, False, True, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Supernova", 0, 0, False, True, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Nebula", 0, 0, False, True, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Gravity Rift", 0, 0, False, True, False, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Blank", 0, 0, False, False, True, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Blank", 0, 0, False, False, True, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Blank", 0, 0, False, False, True, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Blank", 0, 0, False, False, True, (0, 0, 0, 0), (0, 0, 0, 0)),
+    ("Blank", 0, 0, False, False, True, (0, 0, 0, 0), (0, 0, 0, 0)),
 ]
 
 # allocations of tiles by number of players
@@ -153,6 +157,8 @@ formatters = {
         "Col4 Pre": "; ",
         "Col5 Pre": "",
         "Col6 Pre": "",
+        "Col7 Pre": "; ",
+        "Col8 Pre": "; ",
         "System Post": "\n",
         "Table Post": "",
         "Summary Pre": "  ",
@@ -172,6 +178,8 @@ formatters = {
             "<th>Wormhole</th>" +
             "<th>Anomaly</th>" +
             "<th>Blank</th>" +
+            "<th>Trait</th>" +
+            "<th>Technology</th>" +
             "</tr>"
         ),
         "System Pre": "<tr><td>",
@@ -181,6 +189,8 @@ formatters = {
         "Col4 Pre": "</td><td>",
         "Col5 Pre": "</td><td>",
         "Col6 Pre": "</td><td>",
+        "Col7 Pre": "</td><td>",
+        "Col8 Pre": "</td><td>",
         "System Sep": "",
         "System Post": "</td></tr>",
         "Table Post": "</table>",
@@ -205,6 +215,10 @@ wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][3]]
 anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][4]]
 # Indices of blank systems
 blank = [ii for ii in range(0, len(tiles)) if tiles[ii][5]]
+# Traits for each tile
+traits = [tile[6] for tile in tiles]
+# Technology for each tile
+technologies = [tile[7] for tile in tiles]
 
 
 # Hold a set of results
@@ -404,6 +418,36 @@ class Results:
             self._allocate_planet(rem, -1)
 
 
+def _print_traits(trait):
+    name = ("cul", "haz", "ind")
+    res = []
+    for ii in range(0, 3):
+        if trait[ii] > 0:
+            res.append(f"{trait[ii]} {name[ii]}")
+    if len(res) == 0:
+        return ""
+    return f"({', '.join(res)})"
+
+
+def _sum_traits(lhs, rhs):
+    return (lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2])
+
+
+def _print_technology(tech):
+    name = ("red", "grn", "blu", "yel")
+    res = []
+    for ii in range(0, 4):
+        if tech[ii] > 0:
+            res.append(f"{tech[ii]} {name[ii]}")
+    if len(res) == 0:
+        return ""
+    return f"({', '.join(res)})"
+
+
+def _sum_technology(lhs, rhs):
+    return (lhs[0] + rhs[0], lhs[1] + rhs[1], lhs[2] + rhs[2], lhs[3] + rhs[3])
+
+
 # Print out planets given a vector of planet indices
 def print_planets(name, planets, formatter):
     output = "{}{}{}{}".format(
@@ -414,6 +458,8 @@ def print_planets(name, planets, formatter):
     )
     total_resource = 0
     total_influence = 0
+    total_traits = (0, 0, 0, 0)
+    total_technology = (0, 0, 0, 0)
     num_planets = len(planets)
     for ii in planets:
         worm = " "
@@ -425,12 +471,16 @@ def print_planets(name, planets, formatter):
             anom = "A"
         if ii in blank:
             blnk = "B"
+        trait = traits[ii]
+        technology = technologies[ii]
         total_resource = total_resource + resource[ii]
         total_influence = total_influence + influence[ii]
+        total_traits = _sum_traits(total_traits, trait)
+        total_technology = _sum_technology(total_technology, technology)
         planet_name = formatter["Planet Formatter"].format(
             names[ii])
         output = (output +
-                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
+                  "{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}".
                   format(
                       formatter["System Pre"],
                       formatter["Col1 Pre"], planet_name,
@@ -439,12 +489,16 @@ def print_planets(name, planets, formatter):
                       formatter["Col4 Pre"], worm,
                       formatter["Col5 Pre"], anom,
                       formatter["Col6 Pre"], blnk,
+                      formatter["Col7 Pre"], _print_traits(trait),
+                      formatter["Col8 Pre"], _print_technology(technology),
                       formatter["System Post"]))
     output = (output +
               ("{}{}Number of systems {}, total resource: {}, " +
-               "total influence {}{}").
+               "total influence {}, total traits: {}, total technology: {}{}").
               format(formatter["Table Post"], formatter["Summary Pre"],
                      num_planets, total_resource, total_influence,
+                     _print_traits(total_traits), _print_technology(
+                         total_technology),
                      formatter["Summary Post"]))
     return output
 
