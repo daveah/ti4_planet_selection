@@ -16,7 +16,7 @@ def main():
     parser.add_argument("-l", "--legendary", type=int, choices=[0, 1, 2], default=0)
     args = parser.parse_args()
     formatter = "Text"
-    option = (args.num_players, args.expansion, args.style)
+    option = (args.num_players, args.expansion, args.style, args.legendary)
     if option in options:
         print(ti4_planet_selection(args.num_players, args.expansion, args.style, args.legendary, formatter))
     else:

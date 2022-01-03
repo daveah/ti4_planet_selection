@@ -77,38 +77,36 @@ class Results:
     def __init__(self, config, expansion, legendary):
         # Extract reference data into working vectors
         # All tile numbers
-        self.numbers = [tile[0] for tile in tiles if tile[10] <= expansion]
+        self.numbers = [tile[0] for tile in tiles if tile[11] <= expansion]
         # All tile names
-        self.names = [tile[1] for tile in tiles if tile[10] <= expansion]
+        self.names = [tile[1] for tile in tiles if tile[11] <= expansion]
         # Resources for each tile
-        self.resource = [tile[2] for tile in tiles if tile[10] <= expansion]
+        self.resource = [tile[2] for tile in tiles if tile[11] <= expansion]
         # Influence for each tile
-        self.influence = [tile[3] for tile in tiles if tile[10] <= expansion]
+        self.influence = [tile[3] for tile in tiles if tile[11] <= expansion]
         # Indices of wormhole systems
-        self.wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][4] and tiles[ii][10] <= expansion]
+        self.wormhole = [ii for ii in range(0, len(tiles)) if tiles[ii][4] and tiles[ii][11] <= expansion]
         # Indices of anomaly systems (red border)
-        self.anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][5] and tiles[ii][10] <= expansion]
+        self.anomaly = [ii for ii in range(0, len(tiles)) if tiles[ii][5] and tiles[ii][11] <= expansion]
         # Indices of blank systems
-        self.blank = [ii for ii in range(0, len(tiles)) if tiles[ii][6] and tiles[ii][10] <= expansion]
+        self.blank = [ii for ii in range(0, len(tiles)) if tiles[ii][6] and tiles[ii][11] <= expansion]
+        # Indices of always shared systems
+        self.force_shared = [ii for ii in range(0, len(tiles)) if tiles[ii][7] and tiles[ii][11] <= expansion]
         # Indices of legendary systems
-        self.legendary = [ii for ii in range(0, len(tiles)) if tiles[ii][7] and tiles[ii][10] <= expansion]
+        self.legendary = [ii for ii in range(0, len(tiles)) if tiles[ii][8] and tiles[ii][11] <= expansion]
         # Traits for each tile
-        self.traits = [tile[8] for tile in tiles if tile[10] <= expansion]
+        self.traits = [tile[9] for tile in tiles if tile[11] <= expansion]
         # Technology for each tile
-        self.technologies = [tile[9] for tile in tiles if tile[10] <= expansion]
+        self.technologies = [tile[10] for tile in tiles if tile[11] <= expansion]
         # Expansion number
-        self.expansion = [tile[10] for tile in tiles if tile[10] <= expansion]
-        # Forced allocations to shared (Mecatol Rex and Mallice)
-        self.force_shared = [
-            ii for ii in range(0, len(tiles)) if tiles[ii][0] in {18, 82} and tiles[ii][10] <= expansion
-        ]
+        self.expansion = [tile[11] for tile in tiles if tile[11] <= expansion]
 
         non_shared_legendary = [ii for ii in self.legendary if ii not in self.force_shared]
         if legendary == 0:
             self.force_shared.extend(non_shared_legendary)
         elif legendary == 1:
             random.shuffle(non_shared_legendary)
-            self.force_shared.extend(non_shared_legendary[0])
+            self.force_shared.append(non_shared_legendary[0])
 
         # Number of players
         self.num_players = None
@@ -127,7 +125,7 @@ class Results:
         self.shared_planets = []
         # Vector of whether a tile has been allocated
         #   set to zero for unallocated, one for allocated
-        self.used = [0 for ii in range(0, len(tiles)) if tiles[ii][10] <= expansion]
+        self.used = [0 for ii in range(0, len(tiles)) if tiles[ii][11] <= expansion]
         for tile in self.force_shared:
             self._allocate_planet(tile, -1)
         self._configure(config)
@@ -225,7 +223,7 @@ class Results:
         # Set resources and influence budget for each player
         self._configure_rip(list(config["resource_influence_allocations"]))
         # Allocate wormholes to the players
-        self._configure_w()
+        self._configure_w(list(config["wormholes"]))
         # Specials are allocated in two sets, one randomised, and one fixed
         # left over specials are put in shared_planets
         specials_r = list(config["specials_shuffled"])
@@ -254,12 +252,19 @@ class Results:
         self.player_planets = [[] for res_infl in res_infls]
 
     # Configure wormholes, allocating evenly to players
-    def _configure_w(self):
+    def _configure_w(self, w):
+        wormholes = []
+        indices = list(range(len(self.wormhole)))
+        for ii in range(len(w)):
+            if w[ii] != -1:
+                wormholes.append(self.wormhole[w[ii]])
+                indices.remove(w[ii])
+            else:
+                random.shuffle(indices)
+                index = indices[0]
+                wormholes.append(self.wormhole[index])
+                indices.remove(index)
         jj = 0
-        if len(self.wormhole) == 6:
-            wormholes = [8, 7, 38, 53, 22, 21]
-        else:
-            wormholes = self.wormhole
         for ii in range(0, len(wormholes)):
             self._allocate_planet(wormholes[ii], jj)
             jj = jj + 1
@@ -399,7 +404,7 @@ def print_planets(name, planets, formatter, results):
 
 # Select tiles for each player for a given number of players
 def ti4_planet_selection(num_players, expansion, style, legendary, formatter_name=None):
-    config = (int(num_players), str(expansion), str(style))
+    config = (int(num_players), str(expansion), str(style), int(legendary))
     # By default use an html formatter
     formatter = None
     if formatter_name is None:

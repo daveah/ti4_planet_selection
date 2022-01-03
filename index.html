@@ -30,22 +30,89 @@
         <p>Warp is only valid for 5 player games, it creates a set of tiles suitable for use in a warp zone 5 player
             game.</p>
     </div>
-    <select id='number_players' onchange="if (document.getElementById('number_players').value == '5') {
-        document.getElementById('warp').disabled=false; } else { document.getElementById('warp').disabled=true; if
-        (document.getElementById('style').value=='warp' ) { document.getElementById('style').value='default'; } }">
+    <select id='version' onchange="if (document.getElementById('version').value == 'Base Game') {
+            document.getElementById('player5').disabled=false; 
+        } else {
+            document.getElementById('player5').disabled=true;
+        }
+        document.getElementById('number_players').value='3';
+        document.getElementById('style').value='default';
+        document.getElementById('legendary').value='0'">
+        <option>Base Game</option>
+        <option>Prophecy of Kings</option>
+    </select>
+    <select id='number_players' onchange="if (document.getElementById('version').value == 'Base Game') {
+            document.getElementById('original').disabled=false
+            document.getElementById('large').disabled=true;
+            document.getElementById('leg0').disabled=false;
+            document.getElementById('leg1').disabled=true;
+            document.getElementById('leg2').disabled=true;
+            document.getElementById('legendary').value='0';
+            if (document.getElementById('number_players').value == '5') {
+                document.getElementById('warp').disabled=false;
+            } else {
+                document.getElementById('warp').disabled=true;
+                if (document.getElementById('style').value=='warp' ) {
+                    document.getElementById('style').value='default';
+                }
+            }
+        } else {
+            if (document.getElementById('number_players').value == '3') {
+                document.getElementById('original').disabled=true
+                document.getElementById('warp').disabled=true
+                document.getElementById('large').disabled=true
+                document.getElementById('leg0').disabled=false;
+                document.getElementById('leg1').disabled=false;
+                document.getElementById('leg2').disabled=false;
+                document.getElementById('style').value='default';
+            } else if (document.getElementById('number_players').value == '4') {
+                document.getElementById('original').disabled=false
+                document.getElementById('warp').disabled=true
+                document.getElementById('large').disabled=true
+                document.getElementById('leg0').disabled=false;
+                document.getElementById('leg1').disabled=false;
+                document.getElementById('leg2').disabled=false;
+                document.getElementById('style').value='default';
+            } else {
+                document.getElementById('original').disabled=true
+                document.getElementById('warp').disabled=true
+                document.getElementById('large').disabled=false
+                document.getElementById('leg0').disabled=false;
+                document.getElementById('leg1').disabled=false;
+                document.getElementById('leg2').disabled=false;
+                document.getElementById('style').value='default';
+            }
+        }">
         <option>3</option>
         <option>4</option>
-        <option>5</option>
+        <option id='player5' disabled=false>5</option>
         <option>6</option>
     </select>
-    <select id='style'>
+    <select id='style' onchange = "if (document.getElementById('version').value == 'large') {
+            document.getElementById('leg0').disabled=true;
+            document.getElementById('leg1').disabled=true;
+            document.getElementById('leg2').disabled=false;
+            document.getElementById('legendary').value = 'leg2';
+        } else if (document.getElementById('version').value == 'Prophecy of Kings') {
+            document.getElementById('leg0').disabled=false;
+            document.getElementById('leg1').disabled=false;
+            document.getElementById('leg2').disabled=false;            
+        }">
         <option>default</option>
-        <option>original</option>
+        <option id="original">original</option>
         <option id='warp' disabled>warp</option>
+        <option id='large' disabled>large</option>
+    </select>
+    <select id='legendary'>
+        <option id='leg0' disabled=false>0</option>
+        <option id='leg1' disabled>1</option>
+        <option id='leg2' disabled>2</option>
     </select>
     <button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection(
         document.getElementById('number_players').value,
-        document.getElementById('style').value);">
+        document.getElementById('version').value,
+        document.getElementById('style').value,
+        document.getElementById('legendary').value);">
         Create the balanced decks
     </button>
 
