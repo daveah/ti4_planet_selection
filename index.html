@@ -30,7 +30,7 @@
         <p>Warp is only valid for 5 player games, it creates a set of tiles suitable for use in a warp zone 5 player
             game.</p>
     </div>
-    <select id='version' onchange="if (document.getElementById('version').value == 'Base Game') {
+    <select id='version' onchange="if (document.getElementById('version').value == 'base') {
             document.getElementById('player5').disabled=false; 
         } else {
             document.getElementById('player5').disabled=true;
@@ -38,10 +38,10 @@
         document.getElementById('number_players').value='3';
         document.getElementById('style').value='default';
         document.getElementById('legendary').value='0'">
-        <option>Base Game</option>
-        <option>Prophecy of Kings</option>
+        <option>base</option>
+        <option>pok</option>
     </select>
-    <select id='number_players' onchange="if (document.getElementById('version').value == 'Base Game') {
+    <select id='number_players' onchange="if (document.getElementById('version').value == 'base') {
             document.getElementById('original').disabled=false
             document.getElementById('large').disabled=true;
             document.getElementById('leg0').disabled=false;
@@ -93,7 +93,7 @@
             document.getElementById('leg1').disabled=true;
             document.getElementById('leg2').disabled=false;
             document.getElementById('legendary').value = 'leg2';
-        } else if (document.getElementById('version').value == 'Prophecy of Kings') {
+        } else if (document.getElementById('version').value == 'pok') {
             document.getElementById('leg0').disabled=false;
             document.getElementById('leg1').disabled=false;
             document.getElementById('leg2').disabled=false;            
@@ -104,7 +104,7 @@
         <option id='large' disabled>large</option>
     </select>
     <select id='legendary'>
-        <option id='leg0' disabled=false>0</option>
+        <option id='leg0'>0</option>
         <option id='leg1' disabled>1</option>
         <option id='leg2' disabled>2</option>
     </select>

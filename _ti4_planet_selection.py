@@ -401,7 +401,6 @@ def print_planets(name, planets, formatter, results):
     )
     return output
 
-
 # Select tiles for each player for a given number of players
 def ti4_planet_selection(num_players, expansion, style, legendary, formatter_name=None):
     config = (int(num_players), str(expansion), str(style), int(legendary))
@@ -414,7 +413,7 @@ def ti4_planet_selection(num_players, expansion, style, legendary, formatter_nam
     results = None
     success = False
     if config not in allocations:
-        return "{}Invalid configuration {}, try another configuration{}".format(
+        return "{}Invalid configuration {}, try another configuration{}, valid configs".format(
             formatter["Error Pre"], config, formatter["Error Post"]
         )
     for _ in range(0, num_iterations):
