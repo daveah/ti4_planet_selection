@@ -253,8 +253,9 @@ class Results:
 
     # Configure wormholes, allocating evenly to players
     def _configure_w(self, w):
+        assert len(self.wormhole) >= len(w)
         wormholes = []
-        indices = list(range(len(self.wormhole)))
+        indices = [ii for ii in range(len(self.wormhole))]
         for ii in range(len(w)):
             if w[ii] != -1:
                 wormholes.append(self.wormhole[w[ii]])
@@ -339,13 +340,22 @@ def _sum_technology(lhs, rhs):
 
 # Print out planets given a vector of planet indices
 def print_planets(name, planets, formatter, results):
+    def int_to_string(ii):
+        ret = "{}".format(ii)
+        while len(ret) < 5:
+            ret = "0" + ret
+        return ret
+
     output = "{}{}{}{}".format(formatter["Title Pre"], name, formatter["Title Post"], formatter["Table Pre"],)
     total_resource = 0
     total_influence = 0
     total_traits = (0, 0, 0, 0)
     total_technology = (0, 0, 0, 0)
     num_planets = len(planets)
-    for ii in planets:
+    planets_str = [int_to_string(ii) for ii in planets]
+    planets_str.sort()
+    for ii_str in planets_str:
+        ii = int(ii_str)
         worm = " "
         anom = " "
         blnk = " "
@@ -417,7 +427,8 @@ def ti4_planet_selection(num_players, expansion, style, legendary, formatter_nam
             formatter["Error Pre"], config, formatter["Error Post"]
         )
     for _ in range(0, num_iterations):
-        results = Results(allocations[config], expansion=expansion_number[expansion], legendary=legendary)
+        exp = expansion_number[expansion]
+        results = Results(allocations[config], exp, legendary)
         if results.allocate():
             success = True
             break
