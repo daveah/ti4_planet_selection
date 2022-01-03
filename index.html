@@ -21,7 +21,8 @@
     <h1>Twilight Imperium 4 Systems Dealer</h1>
     <h2>The tool</h2>
     <div id="greet">
-        Select the number of players.
+        Select either base game or Prophecy of Kings (pok)
+        <p>Select the number of players.</p>
         <p>Default creates decks balanced in resource, influence, wormholes, blanks and anomalies. In default style,
             the number of red and blue backed systems in each deck will not be the same as the original rules.</p>
         <p>Original creates decks balanced in resource, influence and wormholes, but tries to use the original rules
@@ -29,8 +30,11 @@
             rather than a mix of both.</p>
         <p>Warp is only valid for 5 player games, it creates a set of tiles suitable for use in a warp zone 5 player
             game.</p>
+        <p>Large is only used for 6 player games in Prophecy of Kings where a 4 ring galaxy is used</p>
+        <p>Finally select how many legendary planets you want to include (0, 1 or 2)</p>
     </div>
-    <select id='version' onchange="if (document.getElementById('version').value == 'base') {
+    <table><tr><td>Game Version</td>
+    <td><select id='version' onchange="if (document.getElementById('version').value == 'base') {
             document.getElementById('player5').disabled=false; 
             document.getElementById('leg0').disabled=false;
             document.getElementById('leg1').disabled=true;
@@ -47,8 +51,9 @@
         ">
         <option>base</option>
         <option>pok</option>
-    </select>
-    <select id='number_players' onchange="if (document.getElementById('version').value == 'base') {
+    </select></td></tr>
+    <tr><td>Number of Players</td>
+    <td><select id='number_players' onchange="if (document.getElementById('version').value == 'base') {
             document.getElementById('original').disabled=false
             document.getElementById('large').disabled=true;
             document.getElementById('leg0').disabled=false;
@@ -88,8 +93,9 @@
         <option>4</option>
         <option id='player5' disabled=false>5</option>
         <option>6</option>
-    </select>
-    <select id='style' onchange = "if (document.getElementById('style').value == 'large') {
+    </select></td></tr>
+    <tr><td>Game Style</td>
+    <td><select id='style' onchange = "if (document.getElementById('style').value == 'large') {
             document.getElementById('leg0').disabled=true;
             document.getElementById('leg1').disabled=true;
             document.getElementById('leg2').disabled=false;
@@ -103,12 +109,15 @@
         <option id="original">original</option>
         <option id='warp' disabled>warp</option>
         <option id='large' disabled>large</option>
-    </select>
-    <select id='legendary'>
+    </select></td></tr>
+    <tr><td>Number of Legendary Planets</td>
+    <td><select id='legendary'>
         <option id='leg0'>0</option>
         <option id='leg1' disabled>1</option>
         <option id='leg2' disabled>2</option>
-    </select>
+    </select></td></tr>
+    </table>
+    <div>
     <button onclick="document.getElementById('output').innerHTML = ti4.ti4_planet_selection(
         document.getElementById('number_players').value,
         document.getElementById('version').value,
@@ -116,6 +125,7 @@
         document.getElementById('legendary').value);">
         Create the balanced decks
     </button>
+    </div>
 
     <div id="output"></div>
     <h2>Explanation</h2>
