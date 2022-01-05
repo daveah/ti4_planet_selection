@@ -41,4 +41,4 @@ if __name__ == '__main__':
                             "put {}\n".format(file))
         ftp_cmd_line = ftp_cmd_line + "bye\n"
         print(ftp_cmd_line)
-        system("echo \"{}\" | ftp -n".format(ftp_cmd_line))
+        system("echo \"{}\" | ftp -p -n".format(ftp_cmd_line))
