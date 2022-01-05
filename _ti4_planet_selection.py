@@ -2,7 +2,7 @@
 import random
 
 from _tiles import tiles
-from _allocations import allocations
+from _allocations import get_allocations
 
 
 # Reference data - immutable
@@ -75,6 +75,10 @@ formatters = {
 }
 
 expansion_number = {"base": 0, "pok": 1}
+
+
+allocations = get_allocations()
+
 
 # Hold a set of results
 class Results:
