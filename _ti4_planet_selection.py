@@ -14,6 +14,8 @@ formatters = {
     "Text": {
         "Title Pre": "",
         "Title Post": "\n",
+        "Notes Pre": "Setup notes: ",
+        "Notes Post": "\n",
         "Table Pre": "",
         "System Pre": "  ",
         "Col0 Pre": "Num: ",
@@ -36,6 +38,8 @@ formatters = {
     "HTML": {
         "Title Pre": "<h2>",
         "Title Post": "</h2>",
+        "Notes Pre": "<h2>Setup Notes:</h2><p>",
+        "Notes Post": "</p>",
         "Table Pre": (
             "<table><tr>"
             + "<th>Num</th>"
@@ -242,6 +246,8 @@ class Results:
         else:
             specials = specials_r
         self._configure_ab(specials)
+        # Extract the notes block
+        self.notes = config["notes"]
 
     # Given a vector of tuples of (resource, influence) set up internal vectors
     #   for resource, influence and player_planets
@@ -347,6 +353,7 @@ def print_planets(name, planets, formatter, results):
         return ret
 
     output = "{}{}{}{}".format(formatter["Title Pre"], name, formatter["Title Post"], formatter["Table Pre"],)
+    
     total_resource = 0
     total_influence = 0
     total_traits = (0, 0, 0, 0)
@@ -437,7 +444,10 @@ def ti4_planet_selection(num_players, expansion, style, legendary, formatter_nam
             formatter["Error Pre"], num_iterations, formatter["Error Post"]
         )
     results.check_all_used()
-    output = print_planets("Shared planets:", results.shared_planets, formatter, results)
+    output = ""
+    if results.notes: 
+        output = output + "{}{}{}".format(formatter["Notes Pre"], results.notes, formatter["Notes Post"])
+    output = output + print_planets("Shared planets:", results.shared_planets, formatter, results)
     for nn in range(0, results.num_players):
         output = output + print_planets("Player {}".format(nn + 1), results.player_planets[nn], formatter, results)
     return output
