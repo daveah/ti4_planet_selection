@@ -57,7 +57,7 @@ tiles = [
     (68, "Everra (Nebula)", 3, 1, False, True, False, False, False, (1, 0, 0, 0), (0, 0, 0, 0), 1),
     (69, "Accoen, Joel Ir", 4, 6, False, False, False, False, False, (0, 0, 2, 0), (0, 0, 0, 0), 1),
     (70, "Kraag, Siig", 2, 3, False, False, False, False, False, (0, 2, 0, 0), (0, 0, 0, 0), 1),
-    (71, "Ba'kal", 4, 3, False, False, False, False, False, (1, 0, 1, 0), (0, 0, 0, 0), 1),
+    (71, "Ba'kal", 3, 2, False, False, False, False, False, (1, 0, 1, 0), (0, 0, 0, 0), 1),
     (72, "Lisis, Velnor", 4, 3, False, False, False, False, False, (0, 0, 2, 0), (1, 0, 0, 0), 1),
     (73, "Cealdri, Xanhact", 0, 3, False, False, False, False, False, (1, 1, 0, 0), (0, 0, 0, 1), 1),
     (74, "Vega Major, Vega Minor", 3, 3, False, False, False, False, False, (2, 0, 0, 0), (0, 0, 1, 0), 1),

@@ -23,7 +23,7 @@ if __name__ == '__main__':
             str(join("__target__", ff))
             for ff in listdir("__target__")
             if isfile(join("__target__", ff))]
-        file_list_bin = ["ti4.jpg"]
+        file_list_bin = ["ti4.jpg", "favicon.ico"]
         ftp_cmd_line = (
             "verbose\n" +
             "open {}\n".format(args.url) +
