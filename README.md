@@ -1,5 +1,11 @@
 # Twilight Imperium 4 Tile Allocations
 
+## New Version
+
+After the release of Thunder's Edge this version of the code became increasingly hard to maintain, mainly due to the very hacky way the base Python was converted to Javascript.  Therefore I've made a new version to be found at https://github.com/daveah/ti4_deck_builder/
+
+## Summary
+
 Allocate system tiles with balanced resource and influence for Twilight Imperium 4.  Each run of the script generates a new set of decks, randomised within the constraints.
 
 Use from the command line with a single parameter, to specify the number of players (3, 4, 5 or 6 are supported).
