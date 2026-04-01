@@ -55,7 +55,7 @@ tiles = [
     (66, "Hope's End", 3, 0, False, False, False, False, True, (0, 1, 0, 0), (0, 0, 0, 0), 1),
     (67, "Cormund (Gravity Rift)", 2, 0, False, True, False, False, False, (0, 1, 0, 0), (0, 0, 0, 0), 1),
     (68, "Everra (Nebula)", 3, 1, False, True, False, False, False, (1, 0, 0, 0), (0, 0, 0, 0), 1),
-    (69, "Accoen, Joel Ir", 4, 6, False, False, False, False, False, (0, 0, 2, 0), (0, 0, 0, 0), 1),
+    (69, "Accoen, Jeol Ir", 4, 6, False, False, False, False, False, (0, 0, 2, 0), (0, 0, 0, 0), 1),
     (70, "Kraag, Siig", 2, 3, False, False, False, False, False, (0, 2, 0, 0), (0, 0, 0, 0), 1),
     (71, "Ba'kal", 3, 2, False, False, False, False, False, (1, 0, 1, 0), (0, 0, 0, 0), 1),
     (72, "Lisis, Velnor", 4, 3, False, False, False, False, False, (0, 0, 2, 0), (1, 0, 0, 0), 1),
